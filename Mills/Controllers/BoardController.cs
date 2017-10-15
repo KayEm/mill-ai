@@ -4,26 +4,57 @@ using System.Windows;
 
 namespace Mills.Controllers
 {
+    /// <summary>
+    /// Board handling.
+    /// </summary>
     public class BoardController
     {
         BoardModel board;
 
-        public BoardController(BoardModel boardModel)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="board">The board model.</param>
+        public BoardController(BoardModel board)
         {
-            board = boardModel;
+            this.board = board;
         }
 
+        /// <summary>
+        /// Starts the game.
+        /// </summary>
         public void StartGame()
         {
             board.CurrentPlayer = board.Players.First();
         }
 
-        public void PlaceNewPiece(Point position)
+        /// <summary>
+        /// Place new piece on the given position.
+        /// </summary>
+        /// <param name="position">The position where the piece should be placed.</param>
+        /// <returns> True, if the piece was placed; otherwise false.</returns>
+        public bool PlaceNewPiece(Point position)
         {
-            var piece = new PieceModel() { Color = board.CurrentPlayer.Color, Position = position };
-            board.PlaceNewPiece(piece);
+            if (!board.CanPlaceNewPiece())
+            {
+                return false;
+            }
+
+            var isPointEmpty = board.IsPointEmpty(position);
+            if (!isPointEmpty.Item1)
+            {
+                return false;
+            }
+
+            var piece = new PieceModel() { Color = board.CurrentPlayer.Color };
+            board.PlaceNewPiece(piece, isPointEmpty.Item2);
+
+            return true;
         }
 
+        /// <summary>
+        /// Take turn between players.
+        /// </summary>
         public void TakeTurn()
         {
             if(board.CurrentPlayer == board.Players[0])

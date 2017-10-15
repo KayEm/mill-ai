@@ -6,22 +6,39 @@ using System.Windows.Shapes;
 
 namespace Mills.Controllers
 {
+    /// <summary>
+    /// Rendering of the board.
+    /// </summary>
     public class RendererController
     {
         private Canvas canvas;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="canvasControl">Canvas to draw on.</param>
         public RendererController(Canvas canvasControl)
         {
             canvas = canvasControl;
         }
 
-        public void DrawNewPiece(PieceModel piece)
+        /// <summary>
+        /// Draws new piece on the given point.
+        /// </summary>
+        /// <param name="point">Point to draw the piece on.</param>
+        public void DrawNewPiece(PointModel point)
         {
-            Ellipse ellipse = CreateBoardPiece(piece.Color, piece.Position.X, piece.Position.Y);
+            Ellipse ellipse = CreatePiece(point.Piece.Color, point.Bounds);
             canvas.Children.Add(ellipse);
         }
 
-        private Ellipse CreateBoardPiece(Color color, double x, double y)
+        /// <summary>
+        /// Create ellipse for the piece.
+        /// </summary>
+        /// <param name="color">Color of the ellipse.</param>
+        /// <param name="bounds">Bounds to place ellipse on.</param>
+        /// <returns>Ellipse for the corresponding piece in the given bounds.</returns>
+        private Ellipse CreatePiece(Color color, Rect bounds)
         {
             SolidColorBrush fillBrush = new SolidColorBrush() { Color = color };
             SolidColorBrush borderBrush = new SolidColorBrush() { Color = Colors.Black };
@@ -30,7 +47,7 @@ namespace Mills.Controllers
             {
                 Height = 20,
                 Width = 20,
-                Margin = new Thickness(x, y, 25, 25),
+                Margin = new Thickness(bounds.X, bounds.Y, 25, 25),
                 StrokeThickness = 1,
                 Stroke = borderBrush,
                 Fill = fillBrush
