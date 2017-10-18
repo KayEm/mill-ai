@@ -8,6 +8,8 @@
         Title="Mills" Height="400" Width="500" ResizeMode="NoResize">
     <Grid>
 
+        <Ellipse Name="CurrentPlayerIndicator" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="50" Margin="25,30,0,0" Stroke="Black" VerticalAlignment="Top" Width="50"/>
+
         <Canvas Name="BoardCanvas" HorizontalAlignment="Left" Height="300" Margin="100,30,0,0" VerticalAlignment="Top" Width="300" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown">
 
             <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="300" Margin="0,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="300"/>

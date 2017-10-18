@@ -10,12 +10,12 @@ namespace Mills.Models
         /// <summary>
         /// Position on the X coordinate, can be from a until g.
         /// </summary>
-        public string PositionX { get; set; }
+        public string X { get; set; }
 
         /// <summary>
         /// Position on thee Y coordinate, can be from 1 until 7.
         /// </summary>
-        public int PositionY { get; set; }
+        public int Y { get; set; }
 
         /// <summary>
         /// Bounds of the point on the board canvas.

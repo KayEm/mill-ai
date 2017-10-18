@@ -11,7 +11,9 @@ namespace Mills
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {        
+    {
+        private BoardModel boardModel;
+
         private BoardController boardController;
         private RendererController rendererController;
 
@@ -26,23 +28,45 @@ namespace Mills
             // Bootstrapper
             var points = CreateInitialPoints();
             var players = new List<PlayerModel>() { new PlayerModel() { Color = Colors.Red }, new PlayerModel() { Color = Colors.Blue } };
-            var board = new BoardModel(players, points);
+            boardModel = new BoardModel(players, points);
 
-            boardController = new BoardController(board);
+            boardController = new BoardController(boardModel);
+            
+            rendererController = new RendererController(BoardCanvas, CurrentPlayerIndicator);
+            boardModel.NewPiecePlaced += rendererController.DrawNewPiece;
+            boardModel.PieceRemoved += rendererController.DeletePiece;
+            boardModel.TurnTaken += rendererController.UpdatePlayerIndicator;
+
             boardController.StartGame();
-
-            rendererController = new RendererController(BoardCanvas);
-            board.NewPiecePlaced += rendererController.DrawNewPiece;
         }
 
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var currentPoint = Mouse.GetPosition(BoardCanvas);
 
-            if (boardController.PlaceNewPiece(currentPoint))
+            if (boardModel.IsMill)
             {
-                boardController.TakeTurn();
+                if (boardController.RemoveOpponentPiece(currentPoint))
+                {
+                    boardController.TakeTurn();
+                }
+
+                return;
             }
+
+            if (!boardController.PlaceNewPiece(currentPoint))
+            {
+                return;
+            }
+
+            if (boardController.IsNewMillFormed())
+            {
+                // todo
+
+                return;
+            }
+
+            boardController.TakeTurn();
         }
 
         /// <summary>
@@ -52,41 +76,38 @@ namespace Mills
         private List<PointModel> CreateInitialPoints()
         {
             // Object pool pattern
-            var points = new List<PointModel>()
-            {
-                new PointModel() { PositionX = "a", PositionY = 1, Bounds = new Rect() { X = -10, Y = 290, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "a", PositionY = 4, Bounds = new Rect() { X = -10, Y = 140, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "a", PositionY = 7, Bounds = new Rect() { X = -10, Y = -10, Width = 15, Height = 15  } },
+            var a1 = new PointModel() { X = "a", Y = 1, Bounds = new Rect() { X = -10, Y = 290, Width = 15, Height = 15 } };
+            var a4 = new PointModel() { X = "a", Y = 4, Bounds = new Rect() { X = -10, Y = 140, Width = 15, Height = 15 } };
+            var a7 = new PointModel() { X = "a", Y = 7, Bounds = new Rect() { X = -10, Y = -10, Width = 15, Height = 15 } };
 
-                new PointModel() { PositionX = "b", PositionY = 2, Bounds = new Rect() { X = 40, Y = 240, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "b", PositionY = 4, Bounds = new Rect() { X = 40, Y = 140, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "b", PositionY = 6, Bounds = new Rect() { X = 40, Y = 40, Width = 15, Height = 15  } },
+            var b2 = new PointModel() { X = "b", Y = 2, Bounds = new Rect() { X = 40, Y = 240, Width = 15, Height = 15 } };
+            var b4 = new PointModel() { X = "b", Y = 4, Bounds = new Rect() { X = 40, Y = 140, Width = 15, Height = 15 } };
+            var b6 = new PointModel() { X = "b", Y = 6, Bounds = new Rect() { X = 40, Y = 40, Width = 15, Height = 15 } };
 
-                new PointModel() { PositionX = "c", PositionY = 3, Bounds = new Rect() { X = 90, Y = 190, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "c", PositionY = 4, Bounds = new Rect() { X = 90, Y = 140, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "c", PositionY = 5, Bounds = new Rect() { X = 90, Y = 90, Width = 15, Height = 15  } },
+            var c3 = new PointModel() { X = "c", Y = 3, Bounds = new Rect() { X = 90, Y = 190, Width = 15, Height = 15 } };
+            var c4 = new PointModel() { X = "c", Y = 4, Bounds = new Rect() { X = 90, Y = 140, Width = 15, Height = 15 } };
+            var c5 = new PointModel() { X = "c", Y = 5, Bounds = new Rect() { X = 90, Y = 90, Width = 15, Height = 15 } };
 
-                new PointModel() { PositionX = "d", PositionY = 1, Bounds = new Rect() { X = 140, Y = 290, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "d", PositionY = 2, Bounds = new Rect() { X = 140, Y = 240, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "d", PositionY = 3, Bounds = new Rect() { X = 140, Y = 190, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "d", PositionY = 5, Bounds = new Rect() { X = 140, Y = 90, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "d", PositionY = 6, Bounds = new Rect() { X = 140, Y = 40, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "d", PositionY = 7, Bounds = new Rect() { X = 140, Y = -10, Width = 15, Height = 15  } },
+            var d1 = new PointModel() { X = "d", Y = 1, Bounds = new Rect() { X = 140, Y = 290, Width = 15, Height = 15 } };
+            var d2 = new PointModel() { X = "d", Y = 2, Bounds = new Rect() { X = 140, Y = 240, Width = 15, Height = 15 } };
+            var d3 = new PointModel() { X = "d", Y = 3, Bounds = new Rect() { X = 140, Y = 190, Width = 15, Height = 15 } };
+            var d5 = new PointModel() { X = "d", Y = 5, Bounds = new Rect() { X = 140, Y = 90, Width = 15, Height = 15 } };
+            var d6 = new PointModel() { X = "d", Y = 6, Bounds = new Rect() { X = 140, Y = 40, Width = 15, Height = 15 } };
+            var d7 = new PointModel() { X = "d", Y = 7, Bounds = new Rect() { X = 140, Y = -10, Width = 15, Height = 15 } };
 
-                new PointModel() { PositionX = "e", PositionY = 3, Bounds = new Rect() { X = 190, Y = 190, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "e", PositionY = 4, Bounds = new Rect() { X = 190, Y = 140, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "e", PositionY = 5, Bounds = new Rect() { X = 190, Y = 90, Width = 15, Height = 15  } },
+            var e3 = new PointModel() { X = "e", Y = 3, Bounds = new Rect() { X = 190, Y = 190, Width = 15, Height = 15 } };
+            var e4 = new PointModel() { X = "e", Y = 4, Bounds = new Rect() { X = 190, Y = 140, Width = 15, Height = 15 } };
+            var e5 = new PointModel() { X = "e", Y = 5, Bounds = new Rect() { X = 190, Y = 90, Width = 15, Height = 15 } };
 
-                new PointModel() { PositionX = "f", PositionY = 2, Bounds = new Rect() { X = 240, Y = 240, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "f", PositionY = 4, Bounds = new Rect() { X = 240, Y = 140, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "f", PositionY = 6, Bounds = new Rect() { X = 240, Y = 40, Width = 15, Height = 15  } },
+            var f2 = new PointModel() { X = "f", Y = 2, Bounds = new Rect() { X = 240, Y = 240, Width = 15, Height = 15 } };
+            var f4 = new PointModel() { X = "f", Y = 4, Bounds = new Rect() { X = 240, Y = 140, Width = 15, Height = 15 } };
+            var f6 = new PointModel() { X = "f", Y = 6, Bounds = new Rect() { X = 240, Y = 40, Width = 15, Height = 15 } };
 
-                new PointModel() { PositionX = "g", PositionY = 1, Bounds = new Rect() { X = 290, Y = 290, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "g", PositionY = 4, Bounds = new Rect() { X = 290, Y = 140, Width = 15, Height = 15  } },
-                new PointModel() { PositionX = "g", PositionY = 7, Bounds = new Rect() { X = 290, Y = -10, Width = 15, Height = 15  } },
-            };
+            var g1 = new PointModel() { X = "g", Y = 1, Bounds = new Rect() { X = 290, Y = 290, Width = 15, Height = 15 } };
+            var g4 = new PointModel() { X = "g", Y = 4, Bounds = new Rect() { X = 290, Y = 140, Width = 15, Height = 15 } };
+            var g7 = new PointModel() { X = "g", Y = 7, Bounds = new Rect() { X = 290, Y = -10, Width = 15, Height = 15 } };
 
-            return points;
+            return new List<PointModel> { a1, a4, a7, b2, b4, b6, c3, c4, c5, d1, d2, d3, d5, d6, d7, e3, e4, e5, f2, f4, f6, g1, g4, g7 };
         }
     }
 }

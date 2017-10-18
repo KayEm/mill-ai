@@ -1,4 +1,5 @@
 ﻿using Mills.Models;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,14 +13,16 @@ namespace Mills.Controllers
     public class RendererController
     {
         private Canvas canvas;
+        private Ellipse playerIndicator;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="canvasControl">Canvas to draw on.</param>
-        public RendererController(Canvas canvasControl)
+        public RendererController(Canvas canvasControl, Ellipse currentPlayerIndicator)
         {
             canvas = canvasControl;
+            playerIndicator = currentPlayerIndicator;
         }
 
         /// <summary>
@@ -30,6 +33,22 @@ namespace Mills.Controllers
         {
             Ellipse ellipse = CreatePiece(point.Piece.Color, point.Bounds);
             canvas.Children.Add(ellipse);
+        }
+
+        public void DeletePiece(PointModel point)
+        {
+            Ellipse ellipse = FindEllipseInCanvas(point);
+
+            if (ellipse != null)
+            {
+                canvas.Children.Remove(ellipse);
+                ellipse = null;
+            }
+        }
+
+        public void UpdatePlayerIndicator(PlayerModel currentPlayer)
+        {
+            playerIndicator.Fill = new SolidColorBrush() { Color = currentPlayer.Color };
         }
 
         /// <summary>
@@ -52,6 +71,28 @@ namespace Mills.Controllers
                 Stroke = borderBrush,
                 Fill = fillBrush
             };
+        }
+
+        private Ellipse FindEllipseInCanvas(PointModel point)
+        {
+            Ellipse ellipse = null;
+            foreach (var child in canvas.Children)
+            {
+                ellipse = child as Ellipse;
+                if (ellipse == null)
+                {
+                    continue;
+                }
+
+                if (ellipse.Margin.Top == point.Bounds.X && ellipse.Margin.Left == point.Bounds.Y)
+                {
+                    break;
+                }
+
+                ellipse = null;
+            }
+
+            return ellipse;
         }
     }
 }

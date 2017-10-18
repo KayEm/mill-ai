@@ -35,13 +35,13 @@ namespace Mills.Controllers
         /// <returns> True, if the piece was placed; otherwise false.</returns>
         public bool PlaceNewPiece(Point position)
         {
-            if (!board.CanPlaceNewPiece())
+            if (board.AllPiecesPlaced())
             {
                 return false;
             }
 
             var isPointEmpty = board.IsPointEmpty(position);
-            if (!isPointEmpty.Item1)
+            if (isPointEmpty.Item1 || isPointEmpty.Item2.Piece != null)
             {
                 return false;
             }
@@ -53,11 +53,45 @@ namespace Mills.Controllers
         }
 
         /// <summary>
+        /// Remove opponent's piece from the given position.
+        /// </summary>
+        /// <param name="position">The position where the piece should be removed.</param>
+        /// <returns>True is the piece was removed; otherwise false</returns>
+        public bool RemoveOpponentPiece(Point position)
+        {
+            var isPointEmpty = board.IsPointEmpty(position);
+            if (isPointEmpty.Item1)
+            {
+                return false;
+            }
+
+            if (isPointEmpty.Item2.Piece.Color == board.CurrentPlayer.Color)
+            {
+                return false;
+            }
+
+            board.RemovePiece(isPointEmpty.Item2);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check if player placed three of his pieces on contiguous points in a straight line, vertically or horizontally.
+        /// </summary>
+        /// <returns>true, if new mill is formed; otherwise false</returns>
+        public bool IsNewMillFormed()
+        {
+            // todo
+
+            return false;
+        }
+
+        /// <summary>
         /// Take turn between players.
         /// </summary>
         public void TakeTurn()
         {
-            if(board.CurrentPlayer == board.Players[0])
+            if (board.CurrentPlayer == board.Players[0])
             {
                 board.CurrentPlayer = board.Players[1];
             }
