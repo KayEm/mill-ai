@@ -39,11 +39,13 @@ namespace Mills.Controllers
         {
             Ellipse ellipse = FindEllipseInCanvas(point);
 
-            if (ellipse != null)
+            if (ellipse == null)
             {
-                canvas.Children.Remove(ellipse);
-                ellipse = null;
+                return;
             }
+
+            canvas.Children.Remove(ellipse);
+            ellipse = null;
         }
 
         public void UpdatePlayerIndicator(PlayerModel currentPlayer)
@@ -75,24 +77,9 @@ namespace Mills.Controllers
 
         private Ellipse FindEllipseInCanvas(PointModel point)
         {
-            Ellipse ellipse = null;
-            foreach (var child in canvas.Children)
-            {
-                ellipse = child as Ellipse;
-                if (ellipse == null)
-                {
-                    continue;
-                }
-
-                if (ellipse.Margin.Top == point.Bounds.X && ellipse.Margin.Left == point.Bounds.Y)
-                {
-                    break;
-                }
-
-                ellipse = null;
-            }
-
-            return ellipse;
+            return canvas.Children.OfType<Ellipse>()
+                .Where(e => e.Margin.Top == point.Bounds.Y && e.Margin.Left == point.Bounds.X)
+                .FirstOrDefault();            
         }
     }
 }

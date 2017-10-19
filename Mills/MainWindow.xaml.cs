@@ -1,5 +1,6 @@
 ﻿using Mills.Controllers;
 using Mills.Models;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -23,12 +24,15 @@ namespace Mills
             InitializeBoard();
         }
 
+        /// <summary>
+        /// Initializes empty board.
+        /// </summary>
         private void InitializeBoard()
         {
             // Bootstrapper
-            var points = CreateInitialPoints();
+            var initialBoard = CreateInitialBoard();
             var players = new List<PlayerModel>() { new PlayerModel() { Color = Colors.Red }, new PlayerModel() { Color = Colors.Blue } };
-            boardModel = new BoardModel(players, points);
+            boardModel = new BoardModel(players, initialBoard.Item1, initialBoard.Item2);
 
             boardController = new BoardController(boardModel);
             
@@ -40,6 +44,9 @@ namespace Mills
             boardController.StartGame();
         }
 
+        /// <summary>
+        /// Handles mouse left button down.
+        /// </summary>
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var currentPoint = Mouse.GetPosition(BoardCanvas);
@@ -54,15 +61,15 @@ namespace Mills
                 return;
             }
 
-            if (!boardController.PlaceNewPiece(currentPoint))
+            var newPiece = boardController.PlaceNewPiece(currentPoint);
+            if (newPiece == null)
             {
                 return;
             }
 
-            if (boardController.IsNewMillFormed())
+            if (boardController.IsNewMillFormed(newPiece))
             {
-                // todo
-
+                MessageBox.Show("You have a mill!");
                 return;
             }
 
@@ -70,10 +77,10 @@ namespace Mills
         }
 
         /// <summary>
-        /// Creates initial points for the empty board.
+        /// Creates initial points for the empty board and possible mill combinations.
         /// </summary>
-        /// <returns>List of points for the empty board.</returns>
-        private List<PointModel> CreateInitialPoints()
+        /// <returns>List of points for the empty board and list with possible mill combinations.</returns>
+        private Tuple<List<PointModel>, List<List<PointModel>>> CreateInitialBoard()
         {
             // Object pool pattern
             var a1 = new PointModel() { X = "a", Y = 1, Bounds = new Rect() { X = -10, Y = 290, Width = 15, Height = 15 } };
@@ -107,7 +114,36 @@ namespace Mills
             var g4 = new PointModel() { X = "g", Y = 4, Bounds = new Rect() { X = 290, Y = 140, Width = 15, Height = 15 } };
             var g7 = new PointModel() { X = "g", Y = 7, Bounds = new Rect() { X = 290, Y = -10, Width = 15, Height = 15 } };
 
-            return new List<PointModel> { a1, a4, a7, b2, b4, b6, c3, c4, c5, d1, d2, d3, d5, d6, d7, e3, e4, e5, f2, f4, f6, g1, g4, g7 };
+            var points = new List<PointModel> { a1, a4, a7, b2, b4, b6, c3, c4, c5, d1, d2, d3, d5, d6, d7, e3, e4, e5, f2, f4, f6, g1, g4, g7 };
+
+            var mills = new List<List<PointModel>>()
+            {
+                // outer mills
+                new List<PointModel>() { a1, d1, g1},
+                new List<PointModel>() { a1, a4, a7},
+                new List<PointModel>() { a7, d7, g7},
+                new List<PointModel>() { g1, g4, g7},
+
+                // middle mills
+                new List<PointModel>() { b2, d2, f2},
+                new List<PointModel>() { b2, b4, b6},
+                new List<PointModel>() { b6, d6, f6},
+                new List<PointModel>() { f2, f4, f6},
+
+                // inner mills
+                new List<PointModel>() { c3, c4, c5},
+                new List<PointModel>() { c5, d5, e5},
+                new List<PointModel>() { e3, e4, e5},
+                new List<PointModel>() { e3, d3, e3},
+
+                // paralel mills
+                new List<PointModel>() { d1, d2, d3},
+                new List<PointModel>() { a4, b4, c4},
+                new List<PointModel>() { e4, f4, g4},
+                new List<PointModel>() { d5, d6, d7}
+            };
+            
+            return new Tuple<List<PointModel>, List<List<PointModel>>>(points, mills);
         }
     }
 }

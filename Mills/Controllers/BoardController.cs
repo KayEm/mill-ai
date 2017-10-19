@@ -1,4 +1,5 @@
 ﻿using Mills.Models;
+using System;
 using System.Linq;
 using System.Windows;
 
@@ -9,7 +10,7 @@ namespace Mills.Controllers
     /// </summary>
     public class BoardController
     {
-        BoardModel board;
+        BoardModel boardModel;
 
         /// <summary>
         /// Constructor
@@ -17,7 +18,7 @@ namespace Mills.Controllers
         /// <param name="board">The board model.</param>
         public BoardController(BoardModel board)
         {
-            this.board = board;
+            boardModel = board;
         }
 
         /// <summary>
@@ -25,31 +26,31 @@ namespace Mills.Controllers
         /// </summary>
         public void StartGame()
         {
-            board.CurrentPlayer = board.Players.First();
+            boardModel.CurrentPlayer = boardModel.Players.First();
         }
 
         /// <summary>
         /// Place new piece on the given position.
         /// </summary>
         /// <param name="position">The position where the piece should be placed.</param>
-        /// <returns> True, if the piece was placed; otherwise false.</returns>
-        public bool PlaceNewPiece(Point position)
+        /// <returns> The new piece, if the piece was placed; otherwise null.</returns>
+        public PieceModel PlaceNewPiece(Point position)
         {
-            if (board.AllPiecesPlaced())
+            if (boardModel.AllPiecesPlaced())
             {
-                return false;
+                return null;
             }
 
-            var isPointEmpty = board.IsPointEmpty(position);
-            if (isPointEmpty.Item1 || isPointEmpty.Item2.Piece != null)
+            var pointModel = boardModel.GetPointModelByPosition(position);
+            if (pointModel == null)
             {
-                return false;
+                return null;
             }
 
-            var piece = new PieceModel() { Color = board.CurrentPlayer.Color };
-            board.PlaceNewPiece(piece, isPointEmpty.Item2);
+            var pieceModel = new PieceModel() { Color = boardModel.CurrentPlayer.Color };
+            boardModel.PlaceNewPiece(pieceModel, pointModel);
 
-            return true;
+            return pieceModel;
         }
 
         /// <summary>
@@ -59,18 +60,18 @@ namespace Mills.Controllers
         /// <returns>True is the piece was removed; otherwise false</returns>
         public bool RemoveOpponentPiece(Point position)
         {
-            var isPointEmpty = board.IsPointEmpty(position);
-            if (isPointEmpty.Item1)
+            var pointModel = boardModel.GetPointModelByPosition(position);
+            if (pointModel == null)
             {
                 return false;
             }
 
-            if (isPointEmpty.Item2.Piece.Color == board.CurrentPlayer.Color)
+            if (pointModel.Piece?.Color == boardModel.CurrentPlayer.Color)
             {
                 return false;
             }
 
-            board.RemovePiece(isPointEmpty.Item2);
+            boardModel.RemovePiece(pointModel);
 
             return true;
         }
@@ -79,11 +80,18 @@ namespace Mills.Controllers
         /// Check if player placed three of his pieces on contiguous points in a straight line, vertically or horizontally.
         /// </summary>
         /// <returns>true, if new mill is formed; otherwise false</returns>
-        public bool IsNewMillFormed()
+        public bool IsNewMillFormed(PieceModel addedPiece)
         {
-            // todo
+            var mills = boardModel.Mills.Where(m => m.Any(p => p.Piece == addedPiece));
+            
+            if (mills == null)
+            {
+                return false;
+            }
 
-            return false;
+            boardModel.IsMill = mills.Any(m => m.All(p => p.Piece?.Color == addedPiece.Color));
+
+            return boardModel.IsMill;
         }
 
         /// <summary>
@@ -91,13 +99,15 @@ namespace Mills.Controllers
         /// </summary>
         public void TakeTurn()
         {
-            if (board.CurrentPlayer == board.Players[0])
+            boardModel.IsMill = false;
+
+            if (boardModel.CurrentPlayer == boardModel.Players[0])
             {
-                board.CurrentPlayer = board.Players[1];
+                boardModel.CurrentPlayer = boardModel.Players[1];
             }
             else
             {
-                board.CurrentPlayer = board.Players[0];
+                boardModel.CurrentPlayer = boardModel.Players[0];
             }
         }
     }

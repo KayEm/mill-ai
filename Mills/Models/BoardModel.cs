@@ -17,10 +17,11 @@ namespace Mills.Models
         /// </summary>
         /// <param name="players">Players in the game.</param>
         /// <param name="points">Points for the board.</param>
-        public BoardModel(List<PlayerModel> players, List<PointModel> points)
+        public BoardModel(List<PlayerModel> players, List<PointModel> points, List<List<PointModel>> mills)
         {
             Players = players;
             Points = points;
+            Mills = mills;
         }
 
         /// <summary>
@@ -32,6 +33,11 @@ namespace Mills.Models
         /// Players of the game.
         /// </summary>
         public List<PlayerModel> Players { get; private set; }
+
+        /// <summary>
+        /// Possible mill combinations.
+        /// </summary>
+        public List<List<PointModel>> Mills { get; private set; }
 
         /// <summary>
         /// Player in current turn.
@@ -50,7 +56,7 @@ namespace Mills.Models
             }
         }
 
-        public bool IsMill { get; private set; }
+        public bool IsMill { get; set; }
 
         /// <summary>
         /// Action raised when new piece is placed on the board.
@@ -96,7 +102,7 @@ namespace Mills.Models
         /// <returns>True, if the new piece can be placed; otherwise false.</returns>
         public bool AllPiecesPlaced()
         {
-            return Points.Count(p => p.Piece != null && p.Piece.Color == CurrentPlayer.Color) == 9;
+            return Points.Count(p => p.Piece?.Color == CurrentPlayer.Color) == 9;
         }
 
         /// <summary>
@@ -104,16 +110,9 @@ namespace Mills.Models
         /// </summary>
         /// <param name="position">Position to to be checked.</param>
         /// <returns>True and the corresponding point, if empty point is found at that position.</returns>
-        public Tuple<bool, PointModel> IsPointEmpty(Point position)
+        public PointModel GetPointModelByPosition(Point position)
         {
-            var point = Points.Where(p  => p.Bounds.Contains(position)).FirstOrDefault();
-
-            if (point != null)
-            {
-                return new Tuple<bool, PointModel>(false, point);
-            }
-
-            return new Tuple<bool, PointModel>(true, null);
+            return Points.Where(p  => p.Bounds.Contains(position)).FirstOrDefault();
         }
     }
 }
