@@ -2,7 +2,7 @@
 
 namespace Mills.Models
 {
-    public class PlayerModel : NotifyPropertyModel
+    public class PlayerModel
     {
         private Color color;
         
@@ -15,10 +15,11 @@ namespace Mills.Models
             set
             {
                 color = value;
-                NotifyPropertyChanged("Color");
             }
         }
 
         public bool AllPiecesAdded { get; set; }
+
+        public bool HasMill { get; set; }
     }
 }

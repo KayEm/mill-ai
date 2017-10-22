@@ -10,7 +10,5 @@ namespace Mills.Models
         }
         
         public List<List<PointModel>> Mills { get; private set; }
-
-        public bool IsMill { get; set; }
     }
 }

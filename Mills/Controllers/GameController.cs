@@ -20,6 +20,8 @@ namespace Mills.Controllers
         
         public void TakeTurn()
         {
+            gameModel.CurrentPlayer.HasMill = false;
+
             if (gameModel.CurrentPlayer == gameModel.Players[0])
             {
                 gameModel.CurrentPlayer = gameModel.Players[1];
@@ -41,9 +43,9 @@ namespace Mills.Controllers
             player.AllPiecesAdded = gameModel.BoardModel.Points.Count(p => p.Piece?.Color == player.Color) == 9;
         }
 
-        public bool CanTakeTurn(bool isMill)
+        public bool CanTakeTurn()
         {
-            if (isMill)
+            if (gameModel.CurrentPlayer.HasMill)
             {
                 return false;
             }
@@ -51,9 +53,9 @@ namespace Mills.Controllers
             return true;
         }
 
-        public bool CanRemovePiece(Point position, bool isMill)
+        public bool CanRemovePiece(Point position)
         {
-            if (!isMill)
+            if (!gameModel.CurrentPlayer.HasMill)
             {
                 return false;
             }

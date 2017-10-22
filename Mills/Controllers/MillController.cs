@@ -12,22 +12,15 @@ namespace Mills.Controllers
         {
             millModel = mill;
         }
-
-        public bool IsMill => millModel.IsMill;
-        
+                
         public void CheckNewMill(PlayerModel player)
         {
-            millModel.IsMill = millModel.Mills.Any(m => m.All(p => p.Piece?.Color == player.Color));
+            player.HasMill = millModel.Mills.Any(m => m.All(p => p.Piece?.Color == player.Color));
 
-            if (millModel.IsMill)
+            if (player.HasMill)
             {
                 MessageBox.Show("You have a mill. Remove one piece from the opponent.");
             }
-        }
-
-        public void SetIsMillToFalse()
-        {
-            millModel.IsMill = false;
         }
     }
 }

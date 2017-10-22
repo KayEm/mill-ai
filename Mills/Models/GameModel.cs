@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Mills.Models
 {
-    public class GameModel : NotifyPropertyModel
+    public class GameModel
     {
         private PlayerModel currentPlayer;
         
@@ -14,7 +14,7 @@ namespace Mills.Models
             Players = players;
         }
         
-        public event Action TurnTaken;
+        public event Action<PlayerModel> TurnTaken;
 
         public BoardModel BoardModel { get; private set; }
         
@@ -30,8 +30,7 @@ namespace Mills.Models
             set
             {
                 currentPlayer = value;
-                NotifyPropertyChanged("CurrentPlayer");
-                TurnTaken();
+                TurnTaken(currentPlayer);
             }
         }
 

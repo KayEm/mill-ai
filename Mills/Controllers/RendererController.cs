@@ -34,6 +34,11 @@ namespace Mills.Controllers
             ellipse = null;
         }
 
+        public void SetCurrentPlayerColor(PlayerModel currentPlayer)
+        {
+            rendererModel.CurrentPlayerColor = new SolidColorBrush() { Color = currentPlayer.Color };
+        }
+
         private Ellipse CreatePiece(Color color, Rect bounds)
         {
             SolidColorBrush fillBrush = new SolidColorBrush() { Color = color };
@@ -41,9 +46,9 @@ namespace Mills.Controllers
 
             return new Ellipse()
             {
-                Height = 20,
-                Width = 20,
-                Margin = new Thickness(bounds.X, bounds.Y, 25, 25),
+                Height = 50,
+                Width = 50,
+                Margin = new Thickness(bounds.X, bounds.Y, 50, 50),
                 StrokeThickness = 1,
                 Stroke = borderBrush,
                 Fill = fillBrush

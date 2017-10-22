@@ -77,7 +77,6 @@
   <ItemGroup>
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\MillModel.cs" />
-    <Compile Include="Models\NotifyPropertyModel.cs" />
     <Compile Include="Models\PointModel.cs" />
     <Compile Include="Models\PieceModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
