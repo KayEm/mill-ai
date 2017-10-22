@@ -2,14 +2,23 @@
 
 namespace Mills.Models
 {
-    /// <summary>
-    /// Player in the game.
-    /// </summary>
-    public class PlayerModel
+    public class PlayerModel : NotifyPropertyModel
     {
-        /// <summary>
-        /// Color of the player's pieces.
-        /// </summary>
-        public Color Color { get; set; }
+        private Color color;
+        
+        public Color Color
+        {
+            get
+            {
+                return color;
+            }
+            set
+            {
+                color = value;
+                NotifyPropertyChanged("Color");
+            }
+        }
+
+        public bool AllPiecesAdded { get; set; }
     }
 }

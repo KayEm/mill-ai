@@ -8,15 +8,16 @@ using System.Windows.Media;
 
 namespace Mills
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private BoardModel boardModel;
+        public GameModel GameModel;
 
+        private GameController gameController;
         private BoardController boardController;
         private RendererController rendererController;
+        private SelectionController selectionController;
+        private MoveController moveController;
+        private MillController millController;
 
         public MainWindow()
         {
@@ -24,62 +25,63 @@ namespace Mills
             InitializeBoard();
         }
 
-        /// <summary>
-        /// Initializes empty board.
-        /// </summary>
         private void InitializeBoard()
         {
             // Bootstrapper
             var initialBoard = CreateInitialBoard();
-            var players = new List<PlayerModel>() { new PlayerModel() { Color = Colors.Red }, new PlayerModel() { Color = Colors.Blue } };
-            boardModel = new BoardModel(players, initialBoard.Item1, initialBoard.Item2);
+            var boardModel = new BoardModel(initialBoard.Item1);
+            var players = new List<PlayerModel>() { new PlayerModel() { Color = Colors.White }, new PlayerModel() { Color = Colors.Black } };
+
+            GameModel = new GameModel(boardModel, players);
+            gameController = new GameController(GameModel);
 
             boardController = new BoardController(boardModel);
-            
-            rendererController = new RendererController(BoardCanvas, CurrentPlayerIndicator);
-            boardModel.NewPiecePlaced += rendererController.DrawNewPiece;
-            boardModel.PieceRemoved += rendererController.DeletePiece;
-            boardModel.TurnTaken += rendererController.UpdatePlayerIndicator;
 
-            boardController.StartGame();
+            var millModel = new MillModel(initialBoard.Item2);
+            millController = new MillController(millModel);
+
+            selectionController = new SelectionController(boardModel);
+            moveController = new MoveController(boardModel);
+
+            var rendererModel = new RendererModel(BoardCanvas);
+            rendererController = new RendererController(rendererModel);
+
+            boardModel.NewPieceAdded += rendererController.DrawNewPiece;
+            boardModel.PieceRemoved += rendererController.DeletePiece;
+            GameModel.TurnTaken += millController.SetIsMillToFalse;
+
+            DataContext = GameModel;
+            gameController.StartGame();
         }
 
-        /// <summary>
-        /// Handles mouse left button down.
-        /// </summary>
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var currentPoint = Mouse.GetPosition(BoardCanvas);
 
-            if (boardModel.IsMill)
+            if (gameController.CanRemovePiece(currentPoint, millController.IsMill))
             {
-                if (boardController.RemoveOpponentPiece(currentPoint))
+                boardController.RemoveOpponentPiece(currentPoint, GameModel.OpponentPlayer);
+                return;
+            }
+
+            if (gameController.CannAddNewPiece(currentPoint))
+            {
+                boardController.AddNewPiece(currentPoint, GameModel.CurrentPlayer);
+                gameController.CheckAllPiecesAdded();
+                millController.CheckNewMill(GameModel.CurrentPlayer);
+
+                if (gameController.CanTakeTurn(millController.IsMill))
                 {
-                    boardController.TakeTurn();
+                    gameController.TakeTurn();
                 }
-
                 return;
             }
 
-            var newPiece = boardController.PlaceNewPiece(currentPoint);
-            if (newPiece == null)
-            {
-                return;
-            }
+            // selectionController.SelectPiece(currentPoint, GameModel.CurrentPlayer);
 
-            if (boardController.IsNewMillFormed(newPiece))
-            {
-                MessageBox.Show("You have a mill!");
-                return;
-            }
-
-            boardController.TakeTurn();
+            // moveController.MovePiece(currentPoint);
         }
 
-        /// <summary>
-        /// Creates initial points for the empty board and possible mill combinations.
-        /// </summary>
-        /// <returns>List of points for the empty board and list with possible mill combinations.</returns>
         private Tuple<List<PointModel>, List<List<PointModel>>> CreateInitialBoard()
         {
             // Object pool pattern
