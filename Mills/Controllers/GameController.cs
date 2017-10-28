@@ -6,11 +6,30 @@ namespace Mills.Controllers
 {
     public class GameController
     {
+        private const int minimumPieceCount = 2;
+        private const int maximumPieceCount = 9;
         private GameModel gameModel;
 
         public GameController(GameModel game)
         {
             gameModel = game;
+        }
+
+        public bool HasMill => gameModel.CurrentPlayer.HasMill;
+
+        public bool IsGameOver()
+        {
+            if (!AllPiecesAdded())
+            {
+                return false;
+            }
+
+            return gameModel.OpponentPlayer.CurrentPieceCount == minimumPieceCount;
+        }
+
+        public bool AllPiecesAdded()
+        {
+            return gameModel.CurrentPlayer.TotalPieceCount == maximumPieceCount;
         }
         
         public void StartGame()
@@ -32,30 +51,20 @@ namespace Mills.Controllers
             }
         }
 
-        public void CheckAllPiecesAdded()
+        public void IncreasePieceCount(PointModel point)
         {
-            var player = gameModel.CurrentPlayer;
-            if (player.AllPiecesAdded)
-            {
-                return;
-            }
-
-            player.AllPiecesAdded = gameModel.BoardModel.Points.Count(p => p.Piece?.Color == player.Color) == 9;
+            gameModel.CurrentPlayer.TotalPieceCount++;
+            gameModel.CurrentPlayer.CurrentPieceCount++;
         }
 
-        public bool CanTakeTurn()
+        public void DecreaseOpponentPieceCount(PointModel point)
         {
-            if (gameModel.CurrentPlayer.HasMill)
-            {
-                return false;
-            }
-
-            return true;
+            gameModel.OpponentPlayer.CurrentPieceCount--;
         }
 
         public bool CanRemovePiece(Point position)
         {
-            if (!gameModel.CurrentPlayer.HasMill)
+            if (!HasMill)
             {
                 return false;
             }
@@ -74,15 +83,51 @@ namespace Mills.Controllers
             return true;
         }
 
-        public bool CannAddNewPiece(Point position)
+        public bool CanAddNewPiece(Point position)
         {
-            if (gameModel.CurrentPlayer.AllPiecesAdded)
+            if (HasMill)
+            {
+                return false;
+            }
+
+            if (AllPiecesAdded())
             {
                 return false;
             }
 
             var pointModel = gameModel.BoardModel.GetPointModelByPosition(position);
-            if (pointModel == null)
+            if (pointModel == null || pointModel.Piece != null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool CanSelectPiece(Point position)
+        {
+            if (HasMill)
+            {
+                return false;
+            }
+
+            if (!AllPiecesAdded())
+            {
+                return false;
+            }
+
+            var selectedPoint = gameModel.BoardModel.GetPointModelByPosition(position);
+            return selectedPoint?.Piece?.Color == gameModel.CurrentPlayer.Color;
+        }
+
+        public bool CanMovePiece(Point position)
+        {
+            if (!AllPiecesAdded())
+            {
+                return false;
+            }
+
+            if (!gameModel.BoardModel.IsAnyPieceSelected())
             {
                 return false;
             }

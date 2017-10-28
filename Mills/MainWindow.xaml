@@ -4,13 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Mills" Height="600" Width="800" ResizeMode="NoResize">
+        Title="Mills" Height="650" Width="800" ResizeMode="NoResize">
     <Grid Background="LightYellow">
 
-        <Ellipse Name="CurrentPlayerIndicator" HorizontalAlignment="Left" Height="50" Margin="50,30,0,0" Stroke="Black" VerticalAlignment="Top" Width="50"
+        <TextBox Name="MessageTextBox" HorizontalAlignment="Left" Height="30" Margin="50,15,0,0" VerticalAlignment="Top" Width="700"
+                  Text="{Binding UserMessage}" Background="LightYellow" BorderThickness="0" FontSize="20"  />
+
+        <Ellipse Name="CurrentPlayerIndicator" HorizontalAlignment="Left" Height="50" Margin="50,75,0,0" Stroke="Black" VerticalAlignment="Top" Width="50"
                   Fill="{Binding CurrentPlayerColor}" />
 
-        <Canvas Name="BoardCanvas" HorizontalAlignment="Left" Height="500" Margin="150,30,0,0" VerticalAlignment="Top" Width="500" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown">
+        <Canvas Name="BoardCanvas" HorizontalAlignment="Left" Height="500" Margin="150,75,0,0" VerticalAlignment="Top" Width="500" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown">
 
             <Rectangle Fill="#FFF4ED7C" HorizontalAlignment="Left" Height="500" Margin="0,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="500"/>
             <Rectangle Fill="#FFF4ED7C" HorizontalAlignment="Left" Height="350" Margin="75,75,0,0" Stroke="Black" VerticalAlignment="Top" Width="350"/>

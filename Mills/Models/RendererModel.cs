@@ -15,6 +15,21 @@ namespace Mills.Models
 
         public Canvas Canvas { get; set; }
 
+        private string userMessage;
+        public string UserMessage
+        {
+            get
+            {
+                return userMessage;
+            }
+
+            set
+            {
+                userMessage = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserMessage"));
+            }
+        }
+
         private SolidColorBrush currentPlayerColor;
         public SolidColorBrush CurrentPlayerColor
         {

@@ -17,7 +17,11 @@ namespace Mills.Models
         public event Action<PointModel> NewPieceAdded;
         
         public event Action<PointModel> PieceRemoved;
-        
+
+        public event Action<PointModel, bool> SelectionChanged;
+
+        public event Action<PointModel, PointModel> PieceMoved;
+
         public void PlaceNewPiece(PieceModel piece, PointModel point)
         {
             point.Piece = piece;
@@ -29,12 +33,30 @@ namespace Mills.Models
             point.Piece = null;
             PieceRemoved(point);
         }
-        
+
+        public void ChangeSelection(PointModel point, bool isSelected)
+        {
+            point.Piece.IsSelected = isSelected;
+            SelectionChanged(point, isSelected);
+        }
+
+        public void MovePiece(PointModel oldPoint, PointModel newPoint)
+        {
+            newPoint.Piece = oldPoint.Piece;
+            oldPoint.Piece = null;
+            PieceMoved(oldPoint, newPoint);
+        }
+
         public bool IsAnyPieceSelected()
         {
             return Points.Any(p => p.Piece?.IsSelected == true);
         }
-        
+
+        public PointModel GetSelectedPoint()
+        {
+            return Points.Where(p => p.Piece?.IsSelected == true).First();
+        }
+
         public PointModel GetPointModelByPosition(Point position)
         {
             return Points.Where(p  => p.Bounds.Contains(position)).FirstOrDefault();

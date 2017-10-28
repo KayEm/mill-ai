@@ -3,23 +3,15 @@
 namespace Mills.Models
 {
     public class PlayerModel
-    {
-        private Color color;
+    {        
+        public Color Color { get; set; }
+
+        public int TotalPieceCount { get; set; }
+
+        public int CurrentPieceCount { get; set; }
         
-        public Color Color
-        {
-            get
-            {
-                return color;
-            }
-            set
-            {
-                color = value;
-            }
-        }
-
-        public bool AllPiecesAdded { get; set; }
-
         public bool HasMill { get; set; }
+
+        public int Number { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace Mills.Controllers
 {
     public class RendererController
     {
+        private const string nextPlayerMessage = "Player {0}, it's your turn!";
         private RendererModel rendererModel;
         
         public RendererController(RendererModel renderer)
@@ -34,9 +35,35 @@ namespace Mills.Controllers
             ellipse = null;
         }
 
-        public void SetCurrentPlayerColor(PlayerModel currentPlayer)
+        public void ChangeSelection(PointModel point, bool isSelected)
+        {
+            Ellipse ellipse = FindEllipseInCanvas(point);
+
+            if (ellipse == null)
+            {
+                return;
+            }
+
+            var color = isSelected ? Colors.Red : point.Piece.Color;
+            SolidColorBrush fillBrush = new SolidColorBrush() { Color = color };
+            ellipse.Fill = fillBrush;
+        }
+
+        public void MovePiece(PointModel oldPoint, PointModel newPoint)
+        {
+            Ellipse ellipse = FindEllipseInCanvas(oldPoint);
+            MovePiece(ellipse, newPoint.Bounds);
+        }
+
+        public void UpdateRendererModel(PlayerModel currentPlayer)
         {
             rendererModel.CurrentPlayerColor = new SolidColorBrush() { Color = currentPlayer.Color };
+            ShowMessage(string.Format(nextPlayerMessage, currentPlayer.Number));
+        }
+
+        public void ShowMessage(string message)
+        {
+            rendererModel.UserMessage = message;
         }
 
         private Ellipse CreatePiece(Color color, Rect bounds)
@@ -53,6 +80,11 @@ namespace Mills.Controllers
                 Stroke = borderBrush,
                 Fill = fillBrush
             };
+        }
+
+        private void MovePiece(Ellipse ellipse, Rect newBounds)
+        {
+            ellipse.Margin = new Thickness(newBounds.X, newBounds.Y, 50, 50);
         }
 
         private Ellipse FindEllipseInCanvas(PointModel point)

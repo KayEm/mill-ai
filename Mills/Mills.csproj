@@ -65,9 +65,7 @@
     <Compile Include="Controllers\BoardController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\MillController.cs" />
-    <Compile Include="Controllers\MoveController.cs" />
     <Compile Include="Controllers\RendererController.cs" />
-    <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Models\BoardModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

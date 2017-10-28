@@ -10,13 +10,15 @@ namespace Mills
 {
     public partial class MainWindow : Window
     {
+        private const string newMillMessage = "Player {0} has formed a mill. Remove one piece from the opponent.";
+        private const string cannotRemovePieceMessage = "That piece is in a mill and cannot be removed.";
+        private const string gameOverMessage = "Game over! Player {0} has won the game.";
+
         public GameModel GameModel;
 
         private GameController gameController;
         private BoardController boardController;
         private RendererController rendererController;
-        private SelectionController selectionController;
-        private MoveController moveController;
         private MillController millController;
 
         public MainWindow()
@@ -30,7 +32,10 @@ namespace Mills
             // Bootstrapper
             var initialBoard = CreateInitialBoard();
             var boardModel = new BoardModel(initialBoard.Item1);
-            var players = new List<PlayerModel>() { new PlayerModel() { Color = Colors.White }, new PlayerModel() { Color = Colors.Black } };
+            var players = new List<PlayerModel>() {
+                new PlayerModel() { Color = Colors.White, Number = 1 },
+                new PlayerModel() { Color = Colors.Black, Number = 2 }
+            };
 
             GameModel = new GameModel(boardModel, players);
             gameController = new GameController(GameModel);
@@ -40,15 +45,16 @@ namespace Mills
             var millModel = new MillModel(initialBoard.Item2);
             millController = new MillController(millModel);
 
-            selectionController = new SelectionController(boardModel);
-            moveController = new MoveController(boardModel);
-
             var rendererModel = new RendererModel(BoardCanvas);
             rendererController = new RendererController(rendererModel);
 
             boardModel.NewPieceAdded += rendererController.DrawNewPiece;
+            boardModel.NewPieceAdded += gameController.IncreasePieceCount;
             boardModel.PieceRemoved += rendererController.DeletePiece;
-            GameModel.TurnTaken += rendererController.SetCurrentPlayerColor;
+            boardModel.PieceRemoved += gameController.DecreaseOpponentPieceCount;
+            boardModel.PieceMoved += rendererController.MovePiece;
+            boardModel.SelectionChanged += rendererController.ChangeSelection;
+            GameModel.TurnTaken += rendererController.UpdateRendererModel;
 
             DataContext = rendererModel;
             gameController.StartGame();
@@ -56,30 +62,70 @@ namespace Mills
 
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (gameController.IsGameOver())
+            {
+                return;
+            }
+
             var currentPoint = Mouse.GetPosition(BoardCanvas);
 
             if (gameController.CanRemovePiece(currentPoint))
             {
-                boardController.RemoveOpponentPiece(currentPoint, GameModel.OpponentPlayer);
-                return;
-            }
-
-            if (gameController.CannAddNewPiece(currentPoint))
-            {
-                boardController.AddNewPiece(currentPoint, GameModel.CurrentPlayer);
-                gameController.CheckAllPiecesAdded();
-                millController.CheckNewMill(GameModel.CurrentPlayer);
-
-                if (gameController.CanTakeTurn())
+                var pointModel = GameModel.BoardModel.GetPointModelByPosition(currentPoint);
+                if (millController.IsPieceInMill(pointModel.Piece))
                 {
-                    gameController.TakeTurn();
+                    rendererController.ShowMessage(cannotRemovePieceMessage);
+                    return;
                 }
+
+                boardController.RemoveOpponentPiece(currentPoint, GameModel.OpponentPlayer);
+
+                if (gameController.IsGameOver())
+                {
+                    rendererController.ShowMessage(string.Format(gameOverMessage, GameModel.CurrentPlayer.Number));
+                    return;
+                }
+
+                gameController.TakeTurn();
                 return;
             }
 
-            // selectionController.SelectPiece(currentPoint, GameModel.CurrentPlayer);
+            if (gameController.CanAddNewPiece(currentPoint))
+            {
+                var newPiece = boardController.AddNewPiece(currentPoint, GameModel.CurrentPlayer);
+                millController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
 
-            // moveController.MovePiece(currentPoint);
+                if (gameController.HasMill)
+                {
+                    rendererController.ShowMessage(string.Format(newMillMessage, GameModel.CurrentPlayer.Number));
+                    return;
+                }
+
+                gameController.TakeTurn();
+                return;
+            }
+
+            if (gameController.CanSelectPiece(currentPoint))
+            {
+                boardController.ChangeSelection(currentPoint, GameModel.CurrentPlayer, true);
+                return;
+            }
+
+            if (gameController.CanMovePiece(currentPoint))
+            {
+                var newPiece = boardController.MovePiece(currentPoint);
+                boardController.ChangeSelection(currentPoint, GameModel.CurrentPlayer, false);
+
+                millController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
+
+                if (gameController.HasMill)
+                {
+                    rendererController.ShowMessage(string.Format(newMillMessage, GameModel.CurrentPlayer.Number));
+                    return;
+                }
+
+                gameController.TakeTurn();
+            }
         }
 
         private Tuple<List<PointModel>, List<List<PointModel>>> CreateInitialBoard()
@@ -136,7 +182,7 @@ namespace Mills
                 new List<PointModel>() { c3, c4, c5},
                 new List<PointModel>() { c5, d5, e5},
                 new List<PointModel>() { e3, e4, e5},
-                new List<PointModel>() { e3, d3, e3},
+                new List<PointModel>() { c3, d3, e3},
 
                 // paralel mills
                 new List<PointModel>() { d1, d2, d3},
@@ -144,7 +190,7 @@ namespace Mills
                 new List<PointModel>() { e4, f4, g4},
                 new List<PointModel>() { d5, d6, d7}
             };
-            
+
             return new Tuple<List<PointModel>, List<List<PointModel>>>(points, mills);
         }
     }

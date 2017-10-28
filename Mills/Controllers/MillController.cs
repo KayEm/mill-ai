@@ -1,6 +1,5 @@
 ﻿using Mills.Models;
 using System.Linq;
-using System.Windows;
 
 namespace Mills.Controllers
 {
@@ -13,14 +12,15 @@ namespace Mills.Controllers
             millModel = mill;
         }
                 
-        public void CheckNewMill(PlayerModel player)
+        public void CheckNewMill(PlayerModel player, PieceModel newPiece)
         {
-            player.HasMill = millModel.Mills.Any(m => m.All(p => p.Piece?.Color == player.Color));
+            player.HasMill = IsPieceInMill(newPiece);
+        }
 
-            if (player.HasMill)
-            {
-                MessageBox.Show("You have a mill. Remove one piece from the opponent.");
-            }
+        public bool IsPieceInMill(PieceModel piece)
+        {
+            var possibleMills = millModel.Mills.Where(m => m.Any(p => p.Piece == piece));
+            return possibleMills.Any(m => m.All(p => p.Piece != null && p.Piece.Color == piece.Color));
         }
     }
 }
