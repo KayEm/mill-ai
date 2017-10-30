@@ -9,13 +9,18 @@ Idea from Kampf gegen Mühlen 2017 at https://www.it-talents.de/foerderung/code-
 #Getting Started
 
 Installation process
+
 Software dependencies
+
+- Mills.UnitTests using NSubstitute via Nuget.
+
 Latest releases
+
 API references
 
 #Build and Test
 
-Open solution in Visual Studio, build project and run tests.
+Open solution in Visual Studio, build solution. Run tests in project Mills.UnitTests.
 
 #Contribute
 
