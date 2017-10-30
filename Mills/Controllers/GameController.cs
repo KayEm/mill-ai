@@ -26,11 +26,6 @@ namespace Mills.Controllers
 
             return gameModel.OpponentPlayer.CurrentPieceCount == minimumPieceCount;
         }
-
-        public bool AllPiecesAdded()
-        {
-            return gameModel.CurrentPlayer.TotalPieceCount == maximumPieceCount;
-        }
         
         public void StartGame()
         {
@@ -133,6 +128,11 @@ namespace Mills.Controllers
             }
 
             return true;
+        }
+
+        private bool AllPiecesAdded()
+        {
+            return gameModel.CurrentPlayer.TotalPieceCount == maximumPieceCount;
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Mills.Models
 
         public PointModel GetSelectedPoint()
         {
-            return Points.Where(p => p.Piece?.IsSelected == true).First();
+            return Points.Where(p => p.Piece?.IsSelected == true).FirstOrDefault();
         }
 
         public PointModel GetPointModelByPosition(Point position)

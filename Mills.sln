@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mills", "Mills\Mills.csproj", "{1B09FFBD-0DEE-4E11-B5B1-DDC307E60825}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mills.UnitTests", "Mills.UnitTests\Mills.UnitTests.csproj", "{B25B61B4-44AD-4841-B9D3-B7EE0F695732}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1B09FFBD-0DEE-4E11-B5B1-DDC307E60825}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B09FFBD-0DEE-4E11-B5B1-DDC307E60825}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B09FFBD-0DEE-4E11-B5B1-DDC307E60825}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B25B61B4-44AD-4841-B9D3-B7EE0F695732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B25B61B4-44AD-4841-B9D3-B7EE0F695732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B25B61B4-44AD-4841-B9D3-B7EE0F695732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B25B61B4-44AD-4841-B9D3-B7EE0F695732}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

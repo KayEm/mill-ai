@@ -33,8 +33,8 @@ namespace Mills
             var initialBoard = CreateInitialBoard();
             var boardModel = new BoardModel(initialBoard.Item1);
             var players = new List<PlayerModel>() {
-                new PlayerModel() { Color = Colors.White, Number = 1 },
-                new PlayerModel() { Color = Colors.Black, Number = 2 }
+                new PlayerModel(1, Colors.White),
+                new PlayerModel(2, Colors.Black)
             };
 
             GameModel = new GameModel(boardModel, players);
@@ -113,7 +113,7 @@ namespace Mills
 
             if (gameController.CanMovePiece(currentPoint))
             {
-                var newPiece = boardController.MovePiece(currentPoint);
+                var newPiece = boardController.MoveSelectedPiece(currentPoint);
                 boardController.ChangeSelection(currentPoint, GameModel.CurrentPlayer, false);
 
                 millController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
