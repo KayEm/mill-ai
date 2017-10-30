@@ -1,13 +1,12 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mills.Models;
-using System.Collections.Generic;
 using NSubstitute;
 using Mills.Controllers;
 using System.Windows;
 using System.Windows.Media;
 using System.Linq;
 using Mills.UnitTests.Eventing;
+using Mills.UnitTests.Helpers;
 
 namespace Mills.UnitTests.Controllers
 {
@@ -23,7 +22,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var stubBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var mockEventSubscriber = new MockEventSubscriber();
@@ -51,7 +50,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pieceCount);
+            var stubPoints = TestHelper.CreatePoints(pieceCount);
             var stubBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -78,7 +77,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pieceCount);
+            var stubPoints = TestHelper.CreatePoints(pieceCount);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -101,7 +100,7 @@ namespace Mills.UnitTests.Controllers
         public void AddNewPiece_EmptyPointAtPosition_ReturnsNewPieceAndIsNotNull()
         {
             // Arrange
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var stubBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -123,7 +122,7 @@ namespace Mills.UnitTests.Controllers
         public void AddNewPiece_EmptyPointAtPosition_NewPieceIsAddedToCorrectPoint()
         {
             // Arrange
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -151,7 +150,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var stubBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var mockEventSubscriber = new MockEventSubscriber();
@@ -182,7 +181,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -212,7 +211,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -240,7 +239,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(15, 15);
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -272,7 +271,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var stubBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var mockEventSubscriber = new MockEventSubscriber();
@@ -301,7 +300,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -327,7 +326,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var position = new Point(15, 15);
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -356,7 +355,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var position = new Point(x, y);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var stubBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var mockEventSubscriber = new MockEventSubscriber();
@@ -384,7 +383,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
-            var stubPoints = CreatePoints(pointCount);
+            var stubPoints = TestHelper.CreatePoints(pointCount);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -410,7 +409,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var position = new Point(25, 25);
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -435,7 +434,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(25, 25);
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -463,7 +462,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(25, 25);
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -491,7 +490,7 @@ namespace Mills.UnitTests.Controllers
         {
             // Arrange
             var stubPosition = new Point(25, 25);
-            var stubPoints = CreatePoints(5);
+            var stubPoints = TestHelper.CreatePoints(5);
             var mockBoardModel = Substitute.For<BoardModel>(stubPoints);
 
             var stubEventSubscriber = new MockEventSubscriber();
@@ -512,20 +511,6 @@ namespace Mills.UnitTests.Controllers
             // Assert
             var oldPoint = mockBoardModel.Points.Where(p => p.Bounds.Contains(stubPosition)).First();
             Assert.IsFalse(oldPoint.Piece.IsSelected);
-        }
-
-        private List<PointModel> CreatePoints(int count)
-        {
-            var points = new List<PointModel>();
-            for (int i = 0; i < count; i++)
-            {
-                var pointModel = Substitute.For<PointModel>();
-                pointModel.Bounds = new Rect(new Point(i * 10, i * 10), new Size(10, 10));
-
-                points.Add(pointModel);
-            }
-
-            return points;
         }
     }
 }

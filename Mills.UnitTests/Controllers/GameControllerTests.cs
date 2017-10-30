@@ -2,6 +2,7 @@
 using Mills.Controllers;
 using Mills.Models;
 using Mills.UnitTests.Eventing;
+using Mills.UnitTests.Helpers;
 using NSubstitute;
 using System.Collections.Generic;
 using System.Windows.Media;
@@ -16,8 +17,8 @@ namespace Mills.UnitTests
         {
             // Arrange
             var stubPoints = new List<PointModel>();
-            var stubPlayers = CreateDefaultPlayers();
-            var stubGameModel = CreateGameModel(stubPoints, stubPlayers);
+            var stubPlayers = TestHelper.CreateDefaultPlayers();
+            var stubGameModel = TestHelper.CreateGameModel(stubPoints, stubPlayers);
 
             var mockEventSubscriber = new MockEventSubscriber();
             stubGameModel.TurnTaken += mockEventSubscriber.Handle;
@@ -36,8 +37,8 @@ namespace Mills.UnitTests
         {
             // Arrange
             var stubPoints = new List<PointModel>();
-            var stubPlayers = CreateDefaultPlayers();
-            var mockGameModel = CreateGameModel(stubPoints, stubPlayers);
+            var stubPlayers = TestHelper.CreateDefaultPlayers();
+            var mockGameModel = TestHelper.CreateGameModel(stubPoints, stubPlayers);
 
             var stubEventSubscriber = new MockEventSubscriber();
             mockGameModel.TurnTaken += stubEventSubscriber.Handle;
@@ -56,8 +57,8 @@ namespace Mills.UnitTests
         {
             // Arrange
             var stubPoints = new List<PointModel>();
-            var stubPlayers = CreateDefaultPlayers();
-            var stubGameModel = CreateGameModel(stubPoints, stubPlayers);
+            var stubPlayers = TestHelper.CreateDefaultPlayers();
+            var stubGameModel = TestHelper.CreateGameModel(stubPoints, stubPlayers);
 
             var stubEventSubscriber = new MockEventSubscriber();
             stubGameModel.TurnTaken += stubEventSubscriber.Handle;
@@ -76,7 +77,7 @@ namespace Mills.UnitTests
         public void IsGameOver_OpponentHas3Pieces_ReturnsFalse()
         {
             // Arrange
-            var stubPoints = CreatePoints(3, Colors.Green);
+            var stubPoints = TestHelper.CreatePoints(3, Colors.Green);
 
             var stubPlayer1 = Substitute.For<PlayerModel>(1, Colors.Blue);
             stubPlayer1.TotalPieceCount = 9;
@@ -85,7 +86,7 @@ namespace Mills.UnitTests
             stubPlayer2.TotalPieceCount = 9;
             var stubPlayers = new List<PlayerModel> { stubPlayer1, stubPlayer2 };
 
-            var stubGameModel = CreateGameModel(stubPoints, stubPlayers);
+            var stubGameModel = TestHelper.CreateGameModel(stubPoints, stubPlayers);
 
             var stubEventSubscriber = new MockEventSubscriber();
             stubGameModel.TurnTaken += stubEventSubscriber.Handle;
@@ -104,7 +105,7 @@ namespace Mills.UnitTests
         public void IsGameOver_OpponentHas2Pieces_ReturnsTrue()
         {
             // Arrange
-            var stubPoints = CreatePoints(2, Colors.Green);
+            var stubPoints = TestHelper.CreatePoints(2, Colors.Green);
 
             var stubPlayer1 = Substitute.For<PlayerModel>(1, Colors.Blue);
             stubPlayer1.TotalPieceCount = 9;
@@ -113,7 +114,7 @@ namespace Mills.UnitTests
             stubPlayer2.TotalPieceCount = 9;
             var stubPlayers = new List<PlayerModel> { stubPlayer1, stubPlayer2 };
 
-            var stubGameModel = CreateGameModel(stubPoints, stubPlayers);
+            var stubGameModel = TestHelper.CreateGameModel(stubPoints, stubPlayers);
 
             var stubEventSubscriber = new MockEventSubscriber();
             stubGameModel.TurnTaken += stubEventSubscriber.Handle;
@@ -126,36 +127,6 @@ namespace Mills.UnitTests
 
             // Assert
             Assert.IsTrue(isGameOver);
-        }
-
-        public GameModel CreateGameModel(List<PointModel> points, List<PlayerModel> players)
-        {
-            var stubBoardModel = Substitute.For<BoardModel>(points);
-
-            return Substitute.For<GameModel>(stubBoardModel, players);
-        }
-
-        private List<PlayerModel> CreateDefaultPlayers()
-        {
-            var stubPlayer1 = Substitute.For<PlayerModel>(1, Colors.Blue);
-            var stubPlayer2 = Substitute.For<PlayerModel>(2, Colors.Green);
-            return new List<PlayerModel> { stubPlayer1, stubPlayer2 };
-        }
-
-        private List<PointModel> CreatePoints(int count, Color color)
-        {
-            var stubPoints = new List<PointModel>();
-            for (int i = 0; i < count; i++)
-            {
-                var stubpieceModel = Substitute.For<PieceModel>();
-                stubpieceModel.Color = color;
-                var stubPointModel = Substitute.For<PointModel>();
-                stubPointModel.Piece = stubpieceModel;
-
-                stubPoints.Add(stubPointModel);
-            }
-
-            return stubPoints;
         }
     }
 }
