@@ -52,6 +52,7 @@
       <HintPath>..\packages\NSubstitute.3.1.0\lib\net46\NSubstitute.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -65,6 +66,7 @@
     <Compile Include="Controllers\BoardControllerTests.cs" />
     <Compile Include="Eventing\MockEventSubscriber.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
+    <Compile Include="Models\RendererModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
