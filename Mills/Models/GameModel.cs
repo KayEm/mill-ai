@@ -9,15 +9,12 @@ namespace Mills.Models
     {
         private PlayerModel currentPlayer;
         
-        public GameModel(BoardModel boardModel, IBoardService boardService)
+        public GameModel(IBoardService boardService)
         {
-            BoardModel = boardModel;
             Players = boardService.CreatePlayers();
         }
         
         public event Action<PlayerModel> TurnTaken;
-
-        public BoardModel BoardModel { get; private set; }
         
         public List<PlayerModel> Players { get; private set; }
         

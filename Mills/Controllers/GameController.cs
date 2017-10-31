@@ -1,6 +1,5 @@
 ﻿using Mills.Models;
 using System.Linq;
-using System.Windows;
 
 namespace Mills.Controllers
 {
@@ -57,20 +56,14 @@ namespace Mills.Controllers
             gameModel.OpponentPlayer.CurrentPieceCount--;
         }
 
-        public bool CanRemovePiece(Point position)
+        public bool CanRemovePiece(PointModel pointModel)
         {
             if (!HasMill)
             {
                 return false;
             }
 
-            var pointModel = gameModel.BoardModel.GetPointModelByPosition(position);
-            if (pointModel == null)
-            {
-                return false;
-            }
-
-            if (pointModel.Piece?.Color != gameModel.OpponentPlayer.Color)
+            if (pointModel?.Piece?.Color != gameModel.OpponentPlayer.Color)
             {
                 return false;
             }
@@ -78,7 +71,7 @@ namespace Mills.Controllers
             return true;
         }
 
-        public bool CanAddNewPiece(Point position)
+        public bool CanAddNewPiece()
         {
             if (HasMill)
             {
@@ -90,16 +83,10 @@ namespace Mills.Controllers
                 return false;
             }
 
-            var pointModel = gameModel.BoardModel.GetPointModelByPosition(position);
-            if (pointModel == null || pointModel.Piece != null)
-            {
-                return false;
-            }
-
             return true;
         }
 
-        public bool CanSelectPiece(Point position)
+        public bool CanSelectPiece(PointModel pointModel)
         {
             if (HasMill)
             {
@@ -111,18 +98,12 @@ namespace Mills.Controllers
                 return false;
             }
 
-            var selectedPoint = gameModel.BoardModel.GetPointModelByPosition(position);
-            return selectedPoint?.Piece?.Color == gameModel.CurrentPlayer.Color;
+            return pointModel?.Piece?.Color == gameModel.CurrentPlayer.Color;
         }
 
-        public bool CanMovePiece(Point position)
+        public bool CanMovePiece()
         {
             if (!AllPiecesAdded())
-            {
-                return false;
-            }
-
-            if (!gameModel.BoardModel.IsAnyPieceSelected())
             {
                 return false;
             }

@@ -1,8 +1,6 @@
 ﻿using Mills.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
 
 namespace Mills.Models
 {
@@ -50,21 +48,6 @@ namespace Mills.Models
             newPoint.Piece = oldPoint.Piece;
             oldPoint.Piece = null;
             PieceMoved(oldPoint, newPoint);
-        }
-
-        public bool IsAnyPieceSelected()
-        {
-            return Points.Any(p => p.Piece?.IsSelected == true);
-        }
-
-        public PointModel GetSelectedPoint()
-        {
-            return Points.Where(p => p.Piece?.IsSelected == true).FirstOrDefault();
-        }
-
-        public PointModel GetPointModelByPosition(Point position)
-        {
-            return Points.Where(p  => p.Bounds.Contains(position)).FirstOrDefault();
         }
     }
 }

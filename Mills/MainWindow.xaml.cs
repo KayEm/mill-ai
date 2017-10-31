@@ -12,7 +12,7 @@ namespace Mills
         private const string cannotRemovePieceMessage = "That piece is in a mill and cannot be removed.";
         private const string gameOverMessage = "Game over! Player {0} has won the game.";
 
-        public GameModel GameModel;
+        private GameModel gameModel;
 
         private GameController gameController;
         private BoardController boardController;
@@ -28,11 +28,11 @@ namespace Mills
         {
             // Bootstrapper
             var boardService = new BoardService();
-            var boardModel = new BoardModel(boardService);
             
-            GameModel = new GameModel(boardModel, boardService);
-            gameController = new GameController(GameModel);
+            gameModel = new GameModel(boardService);
+            gameController = new GameController(gameModel);
 
+            var boardModel = new BoardModel(boardService);
             boardController = new BoardController(boardModel);
             
             var rendererModel = new RendererModel(BoardCanvas);
@@ -44,7 +44,7 @@ namespace Mills
             boardModel.PieceRemoved += gameController.DecreaseOpponentPieceCount;
             boardModel.PieceMoved += rendererController.MovePiece;
             boardModel.SelectionChanged += rendererController.ChangeSelection;
-            GameModel.TurnTaken += rendererController.UpdateRendererModel;
+            gameModel.TurnTaken += rendererController.UpdateRendererModel;
 
             DataContext = rendererModel;
             gameController.StartGame();
@@ -58,64 +58,129 @@ namespace Mills
             }
 
             var currentPoint = Mouse.GetPosition(BoardCanvas);
-
-            if (gameController.CanRemovePiece(currentPoint))
+            var pointModel = boardController.GetPointModelByPosition(currentPoint);
+            if (pointModel == null)
             {
-                var pointModel = GameModel.BoardModel.GetPointModelByPosition(currentPoint);
-                if (boardController.IsPieceInMill(pointModel.Piece))
-                {
-                    rendererController.ShowMessage(cannotRemovePieceMessage);
-                    return;
-                }
-
-                boardController.RemoveOpponentPiece(currentPoint, GameModel.OpponentPlayer);
-
-                if (gameController.IsGameOver())
-                {
-                    rendererController.ShowMessage(string.Format(gameOverMessage, GameModel.CurrentPlayer.Number));
-                    return;
-                }
-
-                gameController.TakeTurn();
                 return;
             }
 
-            if (gameController.CanAddNewPiece(currentPoint))
+            if (pointModel.Piece == null)
             {
-                var newPiece = boardController.AddNewPiece(currentPoint, GameModel.CurrentPlayer);
-                boardController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
-
-                if (gameController.HasMill)
+                var addHandled = HandleAddNewPiece(currentPoint);
+                if (addHandled)
                 {
-                    rendererController.ShowMessage(string.Format(newMillMessage, GameModel.CurrentPlayer.Number));
                     return;
                 }
 
-                gameController.TakeTurn();
-                return;
-            }
-
-            if (gameController.CanSelectPiece(currentPoint))
-            {
-                boardController.ChangeSelection(currentPoint, GameModel.CurrentPlayer, true);
-                return;
-            }
-
-            if (gameController.CanMovePiece(currentPoint))
-            {
-                var newPiece = boardController.MoveSelectedPiece(currentPoint);
-                boardController.ChangeSelection(currentPoint, GameModel.CurrentPlayer, false);
-
-                boardController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
-
-                if (gameController.HasMill)
+                var moveHandled = HandleMovePiece(currentPoint);
+                if (moveHandled)
                 {
-                    rendererController.ShowMessage(string.Format(newMillMessage, GameModel.CurrentPlayer.Number));
+                    return;
+                }
+            }
+            else
+            {
+                var removeHandled = HandleRemovePiece(pointModel, currentPoint);
+                if (removeHandled)
+                {
                     return;
                 }
 
-                gameController.TakeTurn();
+                var changeSelectionHandled = HandleChangeSelection(pointModel, currentPoint);
+                if (removeHandled)
+                {
+                    return;
+                }
             }
+        }
+
+        private bool HandleChangeSelection(PointModel pointModel, Point currentPoint)
+        {
+            if (!gameController.CanSelectPiece(pointModel))
+            {
+                return false;
+            }
+
+            boardController.ChangeSelection(currentPoint, gameModel.CurrentPlayer, true);
+            return true;
+        }
+
+        private bool HandleRemovePiece(PointModel pointModel, Point currentPoint)
+        {
+            if (!gameController.CanRemovePiece(pointModel))
+            {
+                return false;
+            }
+
+            if (boardController.IsPieceInMill(pointModel.Piece))
+            {
+                rendererController.ShowMessage(cannotRemovePieceMessage);
+                return true;
+            }
+
+            boardController.RemoveOpponentPiece(currentPoint, gameModel.OpponentPlayer);
+
+            if (gameController.IsGameOver())
+            {
+                rendererController.ShowMessage(string.Format(gameOverMessage, gameModel.CurrentPlayer.Number));
+                return true;
+            }
+
+            gameController.TakeTurn();
+            return true;
+        }
+
+        private bool HandleMovePiece(Point currentPoint)
+        {
+            if (!gameController.CanMovePiece())
+            {
+                return false;
+            }
+
+            var newPiece = boardController.MoveSelectedPiece(currentPoint);
+            if (newPiece == null)
+            {
+                return false;
+            }
+
+            boardController.ChangeSelection(currentPoint, gameModel.CurrentPlayer, false);
+
+            gameModel.CurrentPlayer.HasMill = boardController.IsPieceInMill(newPiece);
+
+            if (gameController.HasMill)
+            {
+                rendererController.ShowMessage(string.Format(newMillMessage, gameModel.CurrentPlayer.Number));
+                return true;
+            }
+
+            gameController.TakeTurn();
+            return true;
+        }
+
+        private bool HandleAddNewPiece(Point currentPoint)
+        {
+            if (!gameController.CanAddNewPiece())
+            {
+                return false;
+            }
+
+            var newPiece = boardController.AddNewPiece(currentPoint, gameModel.CurrentPlayer);
+            if (newPiece == null)
+            {
+                return false;
+            }
+
+            gameModel.CurrentPlayer.HasMill = boardController.IsPieceInMill(newPiece);
+
+            if (gameController.HasMill)
+            {
+                rendererController.ShowMessage(
+                    string.Format(newMillMessage, gameModel.CurrentPlayer.Number));
+                return true;
+            }
+
+            gameController.TakeTurn();
+            return true;
         }
     }
 }
