@@ -55,6 +55,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Services\BoardService.cs" />
+    <Compile Include="Services\IBoardService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -65,7 +66,6 @@
     </Compile>
     <Compile Include="Controllers\BoardController.cs" />
     <Compile Include="Controllers\GameController.cs" />
-    <Compile Include="Controllers\MillController.cs" />
     <Compile Include="Controllers\RendererController.cs" />
     <Compile Include="Models\BoardModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -75,7 +75,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\GameModel.cs" />
-    <Compile Include="Models\MillModel.cs" />
     <Compile Include="Models\PointModel.cs" />
     <Compile Include="Models\PieceModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />

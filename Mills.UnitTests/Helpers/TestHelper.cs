@@ -8,13 +8,6 @@ namespace Mills.UnitTests.Helpers
 {
     public class TestHelper
     {
-        public static GameModel CreateGameModel(List<PointModel> points, List<PlayerModel> players)
-        {
-            var stubBoardModel = Substitute.For<BoardModel>(points);
-
-            return Substitute.For<GameModel>(stubBoardModel, players);
-        }
-
         public static List<PlayerModel> CreateDefaultPlayers()
         {
             var stubPlayer1 = Substitute.For<PlayerModel>(1, Colors.Blue);
@@ -22,15 +15,15 @@ namespace Mills.UnitTests.Helpers
             return new List<PlayerModel> { stubPlayer1, stubPlayer2 };
         }
 
-        public static List<PointModel> CreatePoints(int count, Color color)
+        public static List<PointModel> CreatePointsWithPiece(int count, Color color)
         {
             var stubPoints = new List<PointModel>();
             for (int i = 0; i < count; i++)
             {
-                var stubpieceModel = Substitute.For<PieceModel>();
-                stubpieceModel.Color = color;
+                var stubPieceModel = Substitute.For<PieceModel>();
+                stubPieceModel.Color = color;
                 var stubPointModel = Substitute.For<PointModel>();
-                stubPointModel.Piece = stubpieceModel;
+                stubPointModel.Piece = stubPieceModel;
 
                 stubPoints.Add(stubPointModel);
             }
@@ -38,7 +31,7 @@ namespace Mills.UnitTests.Helpers
             return stubPoints;
         }
 
-        public static List<PointModel> CreatePoints(int count)
+        public static List<PointModel> CreatePointsWithBounds(int count)
         {
             var points = new List<PointModel>();
             for (int i = 0; i < count; i++)

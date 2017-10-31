@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mills.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,10 +9,10 @@ namespace Mills.Models
     {
         private PlayerModel currentPlayer;
         
-        public GameModel(BoardModel boardModel, List<PlayerModel> players)
+        public GameModel(BoardModel boardModel, IBoardService boardService)
         {
             BoardModel = boardModel;
-            Players = players;
+            Players = boardService.CreatePlayers();
         }
         
         public event Action<PlayerModel> TurnTaken;

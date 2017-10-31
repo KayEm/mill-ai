@@ -1,10 +1,8 @@
 ﻿using Mills.Controllers;
 using Mills.Models;
 using Mills.Services;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Mills
 {
@@ -19,7 +17,6 @@ namespace Mills
         private GameController gameController;
         private BoardController boardController;
         private RendererController rendererController;
-        private MillController millController;
 
         public MainWindow()
         {
@@ -31,21 +28,13 @@ namespace Mills
         {
             // Bootstrapper
             var boardService = new BoardService();
-            var initialBoard = boardService.CreateInitialBoard();
-            var boardModel = new BoardModel(initialBoard.Item1);
-            var players = new List<PlayerModel>() {
-                new PlayerModel(1, Colors.White),
-                new PlayerModel(2, Colors.Black)
-            };
-
-            GameModel = new GameModel(boardModel, players);
+            var boardModel = new BoardModel(boardService);
+            
+            GameModel = new GameModel(boardModel, boardService);
             gameController = new GameController(GameModel);
 
             boardController = new BoardController(boardModel);
-
-            var millModel = new MillModel(initialBoard.Item2);
-            millController = new MillController(millModel);
-
+            
             var rendererModel = new RendererModel(BoardCanvas);
             rendererController = new RendererController(rendererModel);
 
@@ -73,7 +62,7 @@ namespace Mills
             if (gameController.CanRemovePiece(currentPoint))
             {
                 var pointModel = GameModel.BoardModel.GetPointModelByPosition(currentPoint);
-                if (millController.IsPieceInMill(pointModel.Piece))
+                if (boardController.IsPieceInMill(pointModel.Piece))
                 {
                     rendererController.ShowMessage(cannotRemovePieceMessage);
                     return;
@@ -94,7 +83,7 @@ namespace Mills
             if (gameController.CanAddNewPiece(currentPoint))
             {
                 var newPiece = boardController.AddNewPiece(currentPoint, GameModel.CurrentPlayer);
-                millController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
+                boardController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
 
                 if (gameController.HasMill)
                 {
@@ -117,7 +106,7 @@ namespace Mills
                 var newPiece = boardController.MoveSelectedPiece(currentPoint);
                 boardController.ChangeSelection(currentPoint, GameModel.CurrentPlayer, false);
 
-                millController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
+                boardController.CheckNewMill(GameModel.CurrentPlayer, newPiece);
 
                 if (gameController.HasMill)
                 {

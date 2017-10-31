@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Mills.Services
 {
-    public class BoardService
+    public class BoardService : IBoardService
     {
         public Tuple<List<PointModel>, List<List<PointModel>>> CreateInitialBoard()
         {
@@ -71,6 +72,14 @@ namespace Mills.Services
             };
 
             return new Tuple<List<PointModel>, List<List<PointModel>>>(points, mills);
+        }
+
+        public List<PlayerModel> CreatePlayers()
+        {
+            return new List<PlayerModel>() {
+                new PlayerModel(1, Colors.White),
+                new PlayerModel(2, Colors.Black)
+            };
         }
     }
 }

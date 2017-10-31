@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mills.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -7,13 +8,17 @@ namespace Mills.Models
 {
     public class BoardModel
     {        
-        public BoardModel(List<PointModel> points)
+        public BoardModel(IBoardService boardService)
         {
-            Points = points;
+            var initialBoard = boardService.CreateInitialBoard();
+            Points = initialBoard.Item1;
+            Mills = initialBoard.Item2;
         }
         
         public List<PointModel> Points { get; private set; }
-        
+
+        public List<List<PointModel>> Mills { get; private set; }
+
         public event Action<PointModel> NewPieceAdded;
         
         public event Action<PointModel> PieceRemoved;

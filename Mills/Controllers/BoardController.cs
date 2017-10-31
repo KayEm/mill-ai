@@ -1,4 +1,5 @@
 ﻿using Mills.Models;
+using System.Linq;
 using System.Windows;
 
 namespace Mills.Controllers
@@ -75,6 +76,17 @@ namespace Mills.Controllers
             boardModel.MovePiece(selectedPoint, newPoint);
 
             return newPoint.Piece;
+        }
+
+        public void CheckNewMill(PlayerModel player, PieceModel newPiece)
+        {
+            player.HasMill = IsPieceInMill(newPiece);
+        }
+
+        public bool IsPieceInMill(PieceModel piece)
+        {
+            var possibleMills = boardModel.Mills.Where(m => m.Any(p => p.Piece == piece));
+            return possibleMills.Any(m => m.All(p => p.Piece != null && p.Piece.Color == piece.Color));
         }
     }
 }
