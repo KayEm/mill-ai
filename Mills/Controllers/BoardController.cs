@@ -74,6 +74,11 @@ namespace Mills.Controllers
                 return null;
             }
 
+            if (!newPoint.IsNeighbor(selectedPoint))
+            {
+                return null;
+            }
+
             boardModel.MovePiece(selectedPoint, newPoint);
 
             return newPoint.Piece;

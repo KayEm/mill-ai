@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace Mills.Models
 {
@@ -11,5 +12,12 @@ namespace Mills.Models
         public Rect Bounds { get; set; }
         
         public PieceModel Piece { get; set; }
+
+        public List<PointModel> Neighbors { get; set; }
+
+        internal bool IsNeighbor(PointModel selectedPoint)
+        {
+            return Neighbors.Contains(selectedPoint);
+        }
     }
 }

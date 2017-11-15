@@ -170,15 +170,16 @@ namespace Mills.UnitTests.Controllers
         }
         
         [DataTestMethod]
-        [DataRow(5, 15, 15, 35, 35, 1, DisplayName = "Point at position.")]
-        [DataRow(5, 150, 150, 35, 35, 0, DisplayName = "No point at position.")]
-        [DataRow(5, 25, 25, 25, 25, 0, DisplayName = "Piece on point at position.")]
+        [DataRow(5, 15, 15, 35, 35, 1, 3, 1, DisplayName = "Point at position.")]
+        [DataRow(5, 150, 150, 35, 35, 0, 1, 0, DisplayName = "No point at position.")]
+        [DataRow(5, 25, 25, 25, 25, 3, 4, 0, DisplayName = "Piece on point at position.")]
         public void MoveSelectedPiece_SelectedPoint_PieceMovedRaised(
-            int pointCount, int x, int y, int stubX, int stubY, int expectedCallCount)
+            int pointCount, int x, int y, int stubX, int stubY, int pointIndex, int neightborIndex, int expectedCallCount)
         {
             // Arrange
             var stubPosition = new Point(stubX, stubY);
             var stubPoints = TestHelper.CreatePointsWithBounds(pointCount);
+            stubPoints[pointIndex].Neighbors = new List<PointModel> { stubPoints[neightborIndex] };
 
             var stubBoardService = Substitute.For<IBoardService>();
             stubBoardService.CreateInitialBoard()
@@ -283,6 +284,7 @@ namespace Mills.UnitTests.Controllers
             // Arrange
             var stubPosition = new Point(15, 15);
             var stubPoints = TestHelper.CreatePointsWithBounds(5);
+            stubPoints[2].Neighbors = new List<PointModel> { stubPoints[3] };
 
             var stubBoardService = Substitute.For<IBoardService>();
             stubBoardService.CreateInitialBoard()

@@ -41,6 +41,37 @@ namespace Mills.Services
             var g1 = new PointModel() { X = "g", Y = 1, Bounds = new Rect() { X = 475, Y = 475, Width = 50, Height = 50 } };
             var g4 = new PointModel() { X = "g", Y = 4, Bounds = new Rect() { X = 475, Y = 225, Width = 50, Height = 50 } };
             var g7 = new PointModel() { X = "g", Y = 7, Bounds = new Rect() { X = 475, Y = -25, Width = 50, Height = 50 } };
+                        
+            a1.Neighbors = new List<PointModel> { a4, d1 };
+            a4.Neighbors = new List<PointModel> { a1, b4, a7 };
+            a7.Neighbors = new List<PointModel> { a4, d7 };
+
+            b2.Neighbors = new List<PointModel> { b4, d2 };
+            b4.Neighbors = new List<PointModel> { b2, a4, c4, b6 };
+            b6.Neighbors = new List<PointModel> { b4, d6 };
+
+            c3.Neighbors = new List<PointModel> { d3, c4 };
+            c4.Neighbors = new List<PointModel> { c3, b4, c5 };
+            c5.Neighbors = new List<PointModel> { c3, d5 };
+
+            d1.Neighbors = new List<PointModel> { a1, d2, g1 };
+            d2.Neighbors = new List<PointModel> { d1, b2, f2, d3 };
+            d3.Neighbors = new List<PointModel> { d2, c3, e3 };
+            d5.Neighbors = new List<PointModel> { c5, e5, d6 };
+            d6.Neighbors = new List<PointModel> { d5, b6, f6, d7 };
+            d7.Neighbors = new List<PointModel> { d6, a7, g7 };
+
+            e3.Neighbors = new List<PointModel> { d3, e4 };
+            e4.Neighbors = new List<PointModel> { e3, f4, e5 };
+            e5.Neighbors = new List<PointModel> { e4, d5 };
+
+            f2.Neighbors = new List<PointModel> { d2, f4 };
+            f4.Neighbors = new List<PointModel> { f2, e4, g4, f6 };
+            f6.Neighbors = new List<PointModel> { f4, d6 };
+
+            g1.Neighbors = new List<PointModel> { d1, g4 };
+            g4.Neighbors = new List<PointModel> { g1, f4, g7 };
+            g7.Neighbors = new List<PointModel> { g4, d7 };
 
             var points = new List<PointModel> { a1, a4, a7, b2, b4, b6, c3, c4, c5, d1, d2, d3, d5, d6, d7, e3, e4, e5, f2, f4, f6, g1, g4, g7 };
 
