@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mills.Models;
-using System.ComponentModel;
 using System.Windows.Media;
 using Mills.UnitTests.Eventing;
 

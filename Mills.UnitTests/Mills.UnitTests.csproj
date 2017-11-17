@@ -68,6 +68,7 @@
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="Models\RendererModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BoardServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
