@@ -12,7 +12,7 @@ Idea from [Kampf gegen Mühlen 2017. Entwickle Deine Mühle-KI!](https://www.it-
 
 ## Software dependencies
 
-*Mills.UnitTests using NSubstitute via Nuget.
+* Mills.UnitTests using NSubstitute via Nuget.
 
 ## Latest releases
 
