@@ -8,7 +8,7 @@ namespace Mills.Controllers
 {
     public class RendererController
     {
-        private const string nextPlayerMessage = "Player {0}, it's your turn!";
+        private const string nextPlayerMessage = "Player {0}'s move!";
         private RendererModel rendererModel;
         
         public RendererController(RendererModel renderer)

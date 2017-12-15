@@ -3,28 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Mills.Views"
         mc:Ignorable="d"
-        Title="Mills" Height="650" Width="800" ResizeMode="NoResize">
+        Title="Nine Mill's Game" Height="650" Width="800" ResizeMode="NoResize">
+    
     <Grid Background="LightYellow">
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5*" />
+        </Grid.RowDefinitions>
 
-        <TextBox Name="MessageTextBox" HorizontalAlignment="Left" Height="30" Margin="50,15,0,0" VerticalAlignment="Top" Width="700"
-                  Text="{Binding UserMessage}" Background="LightYellow" BorderThickness="0" FontSize="20"  />
+        <Button Grid.Column="0" Grid.Row="0" Content="Start Two-Player Game" Width="150" Height="50" Command="{Binding Path=StartTwoPlayerGameCommand}" />
+        <Button Grid.Column="0" Grid.Row="1" Content="Play against the computer" Width="150" Height="50" Command="{Binding Path=StartAIPlayerCommand}" />
 
-        <Ellipse Name="CurrentPlayerIndicator" HorizontalAlignment="Left" Height="50" Margin="50,75,0,0" Stroke="Black" VerticalAlignment="Top" Width="50"
-                  Fill="{Binding CurrentPlayerColor}" />
-
-        <Canvas Name="BoardCanvas" HorizontalAlignment="Left" Height="500" Margin="150,75,0,0" VerticalAlignment="Top" Width="500" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown">
-
-            <Rectangle Fill="#FFF4ED7C" HorizontalAlignment="Left" Height="500" Margin="0,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="500"/>
-            <Rectangle Fill="#FFF4ED7C" HorizontalAlignment="Left" Height="350" Margin="75,75,0,0" Stroke="Black" VerticalAlignment="Top" Width="350"/>
-            <Rectangle Fill="#FFF4ED7C" HorizontalAlignment="Left" Height="200" Margin="150,150,0,0" Stroke="Black" VerticalAlignment="Top" Width="200"/>
-
-            <Rectangle HorizontalAlignment="Left" Height="1" Margin="0,250,292,178" Stroke="Black" VerticalAlignment="Top" Width="150"/>
-            <Rectangle HorizontalAlignment="Left" Height="1" Margin="350,250,0,0" Stroke="Black" VerticalAlignment="Top" Width="150"/>
-            <Rectangle HorizontalAlignment="Left" Height="150" Margin="250,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="1"/>
-            <Rectangle HorizontalAlignment="Left" Height="150" Margin="250,350,0,0" Stroke="Black" VerticalAlignment="Top" Width="1"/>
-
-        </Canvas>
+        <views:BoardControl x:Name="BoardControl" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" />
 
     </Grid>
 </Window>
