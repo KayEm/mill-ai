@@ -23,7 +23,7 @@
         <TextBox Name="MessageTextBox" HorizontalAlignment="Left" Height="30" Grid.Column="1" Grid.Row="0" Width="500"
                   Text="{Binding UserMessage}" Background="LightYellow" BorderThickness="0" FontSize="20"  />
 
-        <Canvas Name="BoardCanvas" Height="500" Width="500" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+        <Canvas Name="BoardCanvas" Height="500" Width="500" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
 
             <Rectangle Fill="#FFF4ED7C" HorizontalAlignment="Left" Height="500" Margin="0,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="500"/>
             <Rectangle Fill="#FFF4ED7C" HorizontalAlignment="Left" Height="350" Margin="75,75,0,0" Stroke="Black" VerticalAlignment="Top" Width="350"/>
@@ -34,6 +34,10 @@
             <Rectangle HorizontalAlignment="Left" Height="150" Margin="250,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="1"/>
             <Rectangle HorizontalAlignment="Left" Height="150" Margin="250,350,0,0" Stroke="Black" VerticalAlignment="Top" Width="1"/>
 
+            <Canvas.InputBindings>
+                <MouseBinding MouseAction="LeftClick" Command="{Binding CanvasMouseLeftClickCommand}" />
+            </Canvas.InputBindings>
+            
         </Canvas>
 
     </Grid>

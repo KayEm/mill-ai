@@ -12,13 +12,13 @@ namespace Mills.UnitTests.Models
         public void CurrentPlayerColor_EventSubscriber_PropertyChangedRaised()
         {
             // Arrange
-            var rendererModel = new RendererModel(null);
+            var boardViewModel = new BoardViewModel(null, null, null);
             
             var mockEventSubscriber = new MockEventSubscriber();
-            rendererModel.PropertyChanged += mockEventSubscriber.Handle;
+            boardViewModel.PropertyChanged += mockEventSubscriber.Handle;
 
             // Act
-            rendererModel.CurrentPlayerColor = new SolidColorBrush() { Color = Colors.Black };
+            boardViewModel.CurrentPlayerColor = new SolidColorBrush() { Color = Colors.Black };
 
             // Assert
             Assert.AreEqual(1, mockEventSubscriber.HitCount);
@@ -28,13 +28,13 @@ namespace Mills.UnitTests.Models
         public void UserMessage_EventSubscriber_PropertyChangedRaised()
         {
             // Arrange
-            var rendererModel = new RendererModel(null);
+            var boardViewModel = new BoardViewModel(null, null, null);
 
             var mockEventSubscriber = new MockEventSubscriber();
-            rendererModel.PropertyChanged += mockEventSubscriber.Handle;
+            boardViewModel.PropertyChanged += mockEventSubscriber.Handle;
 
             // Act
-            rendererModel.UserMessage = "Test message";
+            boardViewModel.UserMessage = "Test message";
 
             // Assert
             Assert.AreEqual(1, mockEventSubscriber.HitCount);

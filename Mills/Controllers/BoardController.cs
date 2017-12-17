@@ -1,4 +1,5 @@
 ﻿using Mills.Models;
+using System;
 using System.Linq;
 using System.Windows;
 
@@ -7,29 +8,25 @@ namespace Mills.Controllers
     public class BoardController
     {
         BoardModel boardModel;
-        
+
         public BoardController(BoardModel board)
         {
             boardModel = board;
         }
         
-        public PieceModel AddNewPiece(Point position, PlayerModel player)
+        public void AddNewPiece(PointModel pointModel, PlayerModel player)
         {
-            var pointModel = GetPointModelByPosition(position);
             if (pointModel == null || pointModel.Piece != null)
             {
-                return null;
+                return;
             }
 
             var pieceModel = new PieceModel() { Color = player.Color };
             boardModel.PlaceNewPiece(pieceModel, pointModel);
-
-            return pieceModel;
         }
         
-        public void RemoveOpponentPiece(Point position, PlayerModel opponentPlayer)
+        public void RemovePiece(PointModel pointModel)
         {
-            var pointModel = GetPointModelByPosition(position);
             if (pointModel?.Piece == null)
             {
                 return;
@@ -38,10 +35,9 @@ namespace Mills.Controllers
             boardModel.RemovePiece(pointModel);
         }
 
-        public void ChangeSelection(Point point, PlayerModel player, bool isSelected)
+        public void ChangeSelection(PointModel newSelectedPoint, PlayerModel player, bool isSelected)
         {
-            var newSelectedPoint = GetPointModelByPosition(point);
-            if (newSelectedPoint?.Piece == null)
+            if (newSelectedPoint.Piece == null)
             {
                 return;
             }
@@ -51,58 +47,24 @@ namespace Mills.Controllers
             {
                 boardModel.ChangeSelection(oldSelectedPoint, false);
             }
-
+            
             boardModel.ChangeSelection(newSelectedPoint, isSelected);
         }
 
-        public PieceModel MoveSelectedPiece(Point currentPoint)
+        public void MoveSelectedPiece(PointModel newPoint)
         {
             var selectedPoint = GetSelectedPoint();
-            if (selectedPoint?.Piece == null)
+            if (selectedPoint?.Piece == null || newPoint.Piece != null || !newPoint.IsNeighbor(selectedPoint))
             {
-                return null;
-            }
-
-            var newPoint = GetPointModelByPosition(currentPoint);
-            if (newPoint == null)
-            {
-                return null;
-            }
-
-            if (newPoint.Piece != null)
-            {
-                return null;
-            }
-
-            if (!newPoint.IsNeighbor(selectedPoint))
-            {
-                return null;
+                return;
             }
 
             boardModel.MovePiece(selectedPoint, newPoint);
-
-            return newPoint.Piece;
-        }
-        
-        public bool IsPieceInMill(PieceModel piece)
-        {
-            if (piece == null)
-            {
-                return false;
-            }
-
-            var possibleMills = boardModel.Mills.Where(m => m.Any(p => p.Piece == piece));
-            return possibleMills.Any(m => m.All(p => p.Piece != null && p.Piece.Color == piece.Color));
         }
 
         public PointModel GetSelectedPoint()
         {
             return boardModel.Points.Where(p => p.Piece?.IsSelected == true).FirstOrDefault();
-        }
-
-        public PointModel GetPointModelByPosition(Point position)
-        {
-            return boardModel.Points.Where(p => p.Bounds.Contains(position)).FirstOrDefault();
         }
     }
 }

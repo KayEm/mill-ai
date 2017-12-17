@@ -1,4 +1,5 @@
 ﻿using Mills.Models;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -9,17 +10,19 @@ namespace Mills.Controllers
     public class RendererController
     {
         private const string nextPlayerMessage = "Player {0}'s move!";
-        private RendererModel rendererModel;
-        
-        public RendererController(RendererModel renderer)
+        private BoardViewModel boardViewModel;
+
+        public event Action<string> NotifyUser;
+
+        public RendererController(BoardViewModel boardViewModel)
         {
-            rendererModel = renderer;
+            this.boardViewModel = boardViewModel;
         }
         
         public void DrawNewPiece(PointModel point)
         {
             Ellipse ellipse = CreatePiece(point.Piece.Color, point.Bounds);
-            rendererModel.Canvas.Children.Add(ellipse);
+            boardViewModel.Canvas.Children.Add(ellipse);
         }
 
         public void DeletePiece(PointModel point)
@@ -31,7 +34,7 @@ namespace Mills.Controllers
                 return;
             }
 
-            rendererModel.Canvas.Children.Remove(ellipse);
+            boardViewModel.Canvas.Children.Remove(ellipse);
             ellipse = null;
         }
 
@@ -57,13 +60,8 @@ namespace Mills.Controllers
 
         public void UpdateRendererModel(PlayerModel currentPlayer)
         {
-            rendererModel.CurrentPlayerColor = new SolidColorBrush() { Color = currentPlayer.Color };
-            ShowMessage(string.Format(nextPlayerMessage, currentPlayer.Number));
-        }
-
-        public void ShowMessage(string message)
-        {
-            rendererModel.UserMessage = message;
+            boardViewModel.CurrentPlayerColor = new SolidColorBrush() { Color = currentPlayer.Color };
+            NotifyUser(string.Format(nextPlayerMessage, currentPlayer.Number));
         }
 
         private Ellipse CreatePiece(Color color, Rect bounds)
@@ -89,7 +87,7 @@ namespace Mills.Controllers
 
         private Ellipse FindEllipseInCanvas(PointModel point)
         {
-            return rendererModel.Canvas.Children.OfType<Ellipse>()
+            return boardViewModel.Canvas.Children.OfType<Ellipse>()
                 .Where(e => e.Margin.Top == point.Bounds.Y && e.Margin.Left == point.Bounds.X)
                 .FirstOrDefault();            
         }

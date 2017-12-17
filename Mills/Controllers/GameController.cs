@@ -5,8 +5,6 @@ namespace Mills.Controllers
 {
     public class GameController
     {
-        private const int minimumPieceCount = 2;
-        private const int maximumPieceCount = 9;
         private GameModel gameModel;
 
         public GameController(GameModel game)
@@ -14,18 +12,6 @@ namespace Mills.Controllers
             gameModel = game;
         }
 
-        public bool HasMill => gameModel.CurrentPlayer.HasMill;
-
-        public bool IsGameOver()
-        {
-            if (!AllPiecesAdded())
-            {
-                return false;
-            }
-
-            return gameModel.OpponentPlayer.CurrentPieceCount == minimumPieceCount;
-        }
-        
         public void StartGame()
         {
             gameModel.CurrentPlayer = gameModel.Players.First();
@@ -54,66 +40,6 @@ namespace Mills.Controllers
         public void DecreaseOpponentPieceCount(PointModel point)
         {
             gameModel.OpponentPlayer.CurrentPieceCount--;
-        }
-
-        public bool CanRemovePiece(PointModel pointModel)
-        {
-            if (!HasMill)
-            {
-                return false;
-            }
-
-            if (pointModel?.Piece?.Color != gameModel.OpponentPlayer.Color)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool CanAddNewPiece()
-        {
-            if (HasMill)
-            {
-                return false;
-            }
-
-            if (AllPiecesAdded())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool CanSelectPiece(PointModel pointModel)
-        {
-            if (HasMill)
-            {
-                return false;
-            }
-
-            if (!AllPiecesAdded())
-            {
-                return false;
-            }
-
-            return pointModel?.Piece?.Color == gameModel.CurrentPlayer.Color;
-        }
-
-        public bool CanMovePiece()
-        {
-            if (!AllPiecesAdded())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool AllPiecesAdded()
-        {
-            return gameModel.CurrentPlayer.TotalPieceCount == maximumPieceCount;
         }
     }
 }

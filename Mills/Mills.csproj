@@ -55,6 +55,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Communication\RelayCommand.cs" />
+    <Compile Include="Controllers\UserMessageController.cs" />
     <Compile Include="Services\BoardService.cs" />
     <Compile Include="Services\IBoardService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -87,7 +88,7 @@
     <Compile Include="Models\PointModel.cs" />
     <Compile Include="Models\PieceModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
-    <Compile Include="Models\RendererModel.cs" />
+    <Compile Include="ViewModels\BoardViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
