@@ -6,7 +6,7 @@ The special thing is that you are not playing against another person, but agains
 
 Idea from [Kampf gegen Mühlen 2017. Entwickle Deine Mühle-KI!](https://www.it-talents.de/foerderung/code-competition/code-competition-10-2017)
 
-![Alt text](/Screenshot.jpg?raw=true "Screenshot application")
+![Alt text](/Screenshot.JPG?raw=true "Screenshot application")
 
 # Getting Started
 
